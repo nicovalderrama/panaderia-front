@@ -9,8 +9,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        "marron-claro": "#ab9680",
+        "marron-oscuro": "#8b563b",
+        "marron-principal": "#735945",
+        trigo: "#ebc68e",
       },
     },
   },
