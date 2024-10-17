@@ -16,12 +16,6 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-const kindred = localFont({
-  src: "./fonts/kingred.otf",
-  variable: "--font-kindred",
-  weight: "100 900",
-});
-
 export default function RootLayout({
   children,
 }: Readonly<{

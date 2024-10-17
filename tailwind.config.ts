@@ -16,7 +16,6 @@ const config: Config = {
       },
       fontFamily: {
         kindred: ["Kindred", "sans-serif"],
-        lora: ["Lora", "serif"],
         roboto: ["Roboto", "sans-serif"],
       },
     },
