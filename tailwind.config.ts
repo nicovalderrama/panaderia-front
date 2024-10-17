@@ -14,6 +14,11 @@ const config: Config = {
         "marron-principal": "#735945",
         trigo: "#ebc68e",
       },
+      fontFamily: {
+        kindred: ["Kindred", "sans-serif"],
+        lora: ["Lora", "serif"],
+        roboto: ["Roboto", "sans-serif"],
+      },
     },
   },
   plugins: [],

@@ -1,9 +1,35 @@
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 export default function Header() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Detectar scroll para aplicar el filtro difuminado
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
   return (
-    <header>
-      <nav className="flex items-center justify-between px-1 py-1 pl-4 pr-4 bg-marron-oscuro font-lora">
+    <motion.header
+      className={`sticky top-0 z-50 bg-marron-oscuro transition-all duration-500 text-white ${
+        isScrolled && !isHovered
+          ? "backdrop-blur-md bg-opacity-70"
+          : "bg-opacity-100"
+      }`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <nav className="flex items-center justify-between px-1 py-1 pl-4 pr-4">
         <div className="flex-1">
           <ul className="flex justify-start">
             <li className="pr-3">
@@ -49,6 +75,6 @@ export default function Header() {
           </ul>
         </div>
       </nav>
-    </header>
+    </motion.header>
   );
 }
