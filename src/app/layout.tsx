@@ -4,6 +4,9 @@ import "./globals.css";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import { ReactNode, useEffect } from "react";
+import { Bounce, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -43,8 +46,23 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+         <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={true}
+          newestOnTop={true}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          transition={Bounce}
+        />
         <Header />
+     
         {children}
+        
         <Footer />
       </body>
     </html>

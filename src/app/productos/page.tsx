@@ -14,6 +14,7 @@ interface Producto {
 export default function Productos() {
   // Cambia la función a Productos
   const router = useRouter();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
   const [productos, setProductos] = useState<Producto[]>([]);
   const [busqueda, setBusqueda] = useState<string>("");
   const [categoriaFiltro, setCategoriaFiltro] = useState<string>("todos");
@@ -32,7 +33,7 @@ export default function Productos() {
   };
 
   useEffect(() => {
-    fetch("http://localhost:8000/productos/")
+    fetch(apiUrl+"/productos/")
       .then((response) => response.json())
       .then((data) => setProductos(data))
       .catch((error) => console.error(error));
