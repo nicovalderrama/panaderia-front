@@ -72,7 +72,7 @@ export default function agregarProducto() {
             validationSchema={validationSchemaProducto}
             onSubmit={handleSubmit}
           >
-            {({ isSubmitting }) => (
+            {({ isSubmitting, resetForm }) => (
               <Form className="flex flex-col items-center justify-center w-full">
                 <fieldset className="flex flex-col pt-8 text-amber-900">
                   <div className="flex flex-col mt-2 mb-2">
@@ -181,6 +181,7 @@ export default function agregarProducto() {
 
                 <div className="flex mt-4 mb-4">
                   <button
+                  onClick={() =>resetForm()}
                     className="px-3 py-1 mr-3 text-[#5c3826] border border-[#5c3826] rounded hover:bg-[#5c3826] hover:text-white"
                     type="reset"
                   >
