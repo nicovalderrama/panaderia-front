@@ -109,13 +109,13 @@ export default function AgregarProducto() {
   return (
     <main className="bg-[#ebc68e] flex justify-center items-center min-h-screen">
       <div className="flex w-full ml-12 mr-12 shadow">
-        <div className="flex w-[32rem] items-center justify-center bg-center bg-cover brightness-50 rounded-lg shadow">
+        <div className="flex w-[32rem] items-center justify-center bg-center bg-cover brightness-50 rounded-lg shadow bg-marron-oscuro">
           <Image
             src="/logo-marron-elmana.png"
             alt="Logo Marron"
             width={500}
             height={500}
-            className="rounded-lg shadow"
+            className="rounded-lg"
           />
         </div>
 
