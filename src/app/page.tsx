@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
+import GradualSpacing from "@/components/ui/gradual-spacing";
 
 interface Producto {
   id: number;
@@ -98,7 +99,7 @@ export default function Home() {
       <article className="flex items-center bg-[#ebc68e] pl-3 pt-3 pr-3 min-h-[90vh] bg-[url('/patron-panaderia.png')] bg-repeat bg-[length:100px]">
         <div className="flex flex-col justify-between w-1/2 h-full px-10 py-[12vh] rounded bg-[#8b563b] bg-opacity-80">
           <h2 className="mb-5 text-4xl font-playwrite font-medium text-center text-white">
-            Bienvenido a panadería El Maná
+            <GradualSpacing text="Bienvenido a panadería El Maná" />
           </h2>
           <p className="text-white">
             Ofrecemos una amplia variedad de productos de panificación y
