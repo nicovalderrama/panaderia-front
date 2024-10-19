@@ -9,6 +9,7 @@ interface Producto {
   precio: number;
   cantidad_disponible: number;
   categoria: string;
+  imagen: string;
 }
 
 export default function Productos() {
@@ -33,7 +34,7 @@ export default function Productos() {
   };
 
   useEffect(() => {
-    fetch(apiUrl+"/productos/")
+    fetch(apiUrl + "/productos/")
       .then((response) => response.json())
       .then((data) => setProductos(data))
       .catch((error) => console.error(error));
@@ -77,6 +78,11 @@ export default function Productos() {
             key={producto.id}
             className="border rounded-lg shadow-md p-4 bg-white hover:shadow-lg"
           >
+            <img
+              src={producto.imagen} // URL de la imagen del producto
+              alt={producto.nombre} // Texto alternativo
+              className="w-full h-48 object-cover rounded-md mb-4" // Clase para el estilo
+            />
             <h2 className="text-lg font-bold mb-2">{producto.nombre}</h2>
             <p className="text-gray-700">{producto.descripcion}</p>
             <p className="text-gray-500">Precio: ${producto.precio}</p>

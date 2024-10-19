@@ -1,23 +1,10 @@
 "use client";
-import localFont from "next/font/local";
 import "./globals.css";
 import Header from "./components/header";
 import Footer from "./components/footer";
 import { ReactNode, useEffect } from "react";
 import { Bounce, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
 
 export default function RootLayout({
   children,
@@ -43,10 +30,8 @@ export default function RootLayout({
   }, []);
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-         <ToastContainer
+      <body className="flex flex-col min-h-screen">
+        <ToastContainer
           position="top-right"
           autoClose={5000}
           hideProgressBar={true}
@@ -60,9 +45,9 @@ export default function RootLayout({
           transition={Bounce}
         />
         <Header />
-     
-        {children}
-        
+
+        <main className="flex-grow">{children}</main>
+
         <Footer />
       </body>
     </html>

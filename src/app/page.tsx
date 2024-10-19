@@ -3,69 +3,27 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
+import GradualSpacing from "@/components/ui/gradual-spacing";
 
-const products = [
-  {
-    id: 1,
-    title: "Smart Watch",
-    description:
-      "Stay connected with our latest smartwatch. Track your fitness, receive notifications, and more.",
-    image: "/placeholder.svg?height=200&width=200&text=Smart+Watch",
-  },
-  {
-    id: 2,
-    title: "Wireless Earbuds",
-    description:
-      "Experience crystal-clear sound with our comfortable wireless earbuds. Perfect for music and calls.",
-    image: "/placeholder.svg?height=200&width=200&text=Wireless+Earbuds",
-  },
-  {
-    id: 3,
-    title: "Laptop",
-    description:
-      "Powerful and portable, our laptop is perfect for work and entertainment on-the-go.",
-    image: "/placeholder.svg?height=200&width=200&text=Laptop",
-  },
-  {
-    id: 4,
-    title: "Smartphone",
-    description:
-      "Stay connected with our latest smartphone. Featuring a high-resolution camera and long-lasting battery.",
-    image: "/placeholder.svg?height=200&width=200&text=Smartphone",
-  },
-  {
-    id: 5,
-    title: "Bluetooth Speaker",
-    description:
-      "Enjoy your music anywhere with our portable Bluetooth speaker. Waterproof and long battery life.",
-    image: "/placeholder.svg?height=200&width=200&text=Bluetooth+Speaker",
-  },
-];
+interface Producto {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  precio: number;
+  cantidad_disponible: number;
+  categoria: string;
+  imagen: string;
+}
 
 export default function Home() {
+  const router = useRouter();
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const [productos, setProductos] = useState<Producto[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
+  const [itemsPerPage, setItemsPerPage] = useState(3);
 
-  const startAutoPlay = useCallback(() => {
-    return setInterval(() => {
-      if (!isHovering) {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % products.length);
-      }
-    }, 5000);
-  }, [isHovering]);
-
-  useEffect(() => {
-    const timer = startAutoPlay();
-    return () => clearInterval(timer);
-  }, [startAutoPlay]);
-
-  const paginate = (newDirection: number) => {
-    setCurrentIndex((prevIndex) => {
-      const nextIndex = prevIndex + newDirection;
-      return nextIndex >= 0 ? nextIndex % products.length : products.length - 1;
-    });
-  };
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
     const targetId = e.currentTarget.getAttribute("href")?.slice(1);
@@ -78,12 +36,70 @@ export default function Home() {
       });
     }
   };
+  const handleVerMas = (id: number) => {
+    router.push(`/productos/${id}`);
+  };
+
+  useEffect(() => {
+    fetch(apiUrl + "/productos/")
+      .then((response) => response.json())
+      .then((data) => setProductos(data))
+      .catch((error) => console.error(error));
+  }, [apiUrl]);
+
+  useEffect(() => {
+    const updateItemsPerPage = () => {
+      if (window.innerWidth >= 1024) {
+        setItemsPerPage(3);
+      } else if (window.innerWidth >= 768) {
+        setItemsPerPage(2);
+      } else {
+        setItemsPerPage(1);
+      }
+    };
+
+    updateItemsPerPage();
+    window.addEventListener("resize", updateItemsPerPage);
+
+    return () => {
+      window.removeEventListener("resize", updateItemsPerPage);
+    };
+  }, []);
+
+  const startAutoPlay = useCallback(() => {
+    return setInterval(() => {
+      if (!isHovering && productos.length > 0) {
+        const totalSlides = Math.ceil(productos.length / itemsPerPage);
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
+      }
+    }, 5000);
+  }, [isHovering, productos.length, itemsPerPage]);
+
+  useEffect(() => {
+    const timer = startAutoPlay();
+    return () => clearInterval(timer);
+  }, [startAutoPlay]);
+
+  const paginate = (newDirection: number) => {
+    const totalSlides = Math.ceil(productos.length / itemsPerPage);
+    setCurrentIndex((prevIndex) => {
+      const nextIndex = prevIndex + newDirection;
+      if (nextIndex >= 0 && nextIndex < totalSlides) {
+        return nextIndex;
+      } else if (nextIndex < 0) {
+        return totalSlides - 1;
+      } else {
+        return 0;
+      }
+    });
+  };
+
   return (
     <main className="bg-marron-principal font-outfit">
       <article className="flex items-center bg-[#ebc68e] pl-3 pt-3 pr-3 min-h-[90vh] bg-[url('/patron-panaderia.png')] bg-repeat bg-[length:100px]">
         <div className="flex flex-col justify-between w-1/2 h-full px-10 py-[12vh] rounded bg-[#8b563b] bg-opacity-80">
           <h2 className="mb-5 text-4xl font-playwrite font-medium text-center text-white">
-            Bienvenido a panadería El Maná
+            <GradualSpacing text="Bienvenido a panadería El Maná" />
           </h2>
           <p className="text-white">
             Ofrecemos una amplia variedad de productos de panificación y
@@ -152,23 +168,25 @@ export default function Home() {
         <div className="relative overflow-hidden">
           <motion.ul
             className="flex list-none p-0 m-0"
-            animate={{ x: `-${currentIndex * 100}%` }}
+            animate={{ x: `-${currentIndex * (100 / itemsPerPage)}%` }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            style={{ width: `${100}%` }}
           >
             <AnimatePresence initial={false}>
-              {products.map((product) => (
+              {productos.map((product) => (
                 <motion.li
                   key={product.id}
-                  className="w-full sm:w-1/2 lg:w-1/3 flex-shrink-0 px-2"
+                  className="w-full px-2 flex-shrink-0"
+                  style={{ width: `${100 / itemsPerPage}%` }}
                   onMouseEnter={() => setIsHovering(true)}
                   onMouseLeave={() => setIsHovering(false)}
                   whileHover={{ scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 >
-                  <article className="bg-white rounded-lg shadow-lg overflow-hidden h-full">
+                  <article className="bg-[#ebc68e] rounded-lg shadow-lg overflow-hidden h-full">
                     <motion.img
-                      src={product.image}
-                      alt={product.title}
+                      src={product.imagen}
+                      alt={product.nombre}
                       className="w-full h-48 object-cover"
                       whileHover={{ scale: 1.1 }}
                       transition={{
@@ -178,15 +196,19 @@ export default function Home() {
                       }}
                     />
                     <div className="p-4 flex flex-col h-[calc(100%-12rem)]">
-                      <h2 className="text-xl font-semibold mb-2">
-                        {product.title}
+                      <h2 className="text-xl font-semibold mb-2 text-[#8b563b]">
+                        {product.nombre}
                       </h2>
                       <p className="text-gray-600 mb-4 flex-grow">
-                        {product.description}
+                        {product.descripcion}
                       </p>
                       <motion.button
-                        className="bg-blue-500 text-white px-4 py-2 rounded"
-                        whileHover={{ scale: 1.05, backgroundColor: "#3b82f6" }}
+                        onClick={() => handleVerMas(product.id)}
+                        className="bg-[#8b563b] text-white px-4 py-2 rounded"
+                        whileHover={{
+                          scale: 1.05,
+                          backgroundColor: "#6a3f2d",
+                        }}
                         whileTap={{ scale: 0.95 }}
                         transition={{
                           type: "spring",
@@ -194,7 +216,7 @@ export default function Home() {
                           damping: 10,
                         }}
                       >
-                        View Details
+                        Ver más información
                       </motion.button>
                     </div>
                   </article>
@@ -202,98 +224,32 @@ export default function Home() {
               ))}
             </AnimatePresence>
           </motion.ul>
-          <motion.button
-            className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 ml-2"
-            onClick={() => paginate(-1)}
-            whileHover={{
-              scale: 1.1,
-              backgroundColor: "rgba(255, 255, 255, 0.8)",
-            }}
-            whileTap={{ scale: 0.9 }}
-            aria-label="Previous product"
-          >
-            <ChevronLeft className="w-6 h-6 text-gray-800" />
-          </motion.button>
-          <motion.button
-            className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 mr-2"
-            onClick={() => paginate(1)}
-            whileHover={{
-              scale: 1.1,
-              backgroundColor: "rgba(255, 255, 255, 0.8)",
-            }}
-            whileTap={{ scale: 0.9 }}
-            aria-label="Next product"
-          >
-            <ChevronRight className="w-6 h-6 text-gray-800" />
-          </motion.button>
+
+          {productos.length > itemsPerPage && (
+            <>
+              <motion.button
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 ml-2"
+                onClick={() => paginate(-1)}
+                whileHover={{
+                  scale: 1.1,
+                  backgroundColor: "rgba(0,0,0,0.5)",
+                }}
+              >
+                <ChevronLeft size={24} />
+              </motion.button>
+              <motion.button
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 rounded-full p-2 mr-2"
+                onClick={() => paginate(1)}
+                whileHover={{
+                  scale: 1.1,
+                  backgroundColor: "rgba(0,0,0,0.5)",
+                }}
+              >
+                <ChevronRight size={24} />
+              </motion.button>
+            </>
+          )}
         </div>
-        <nav
-          className="mt-4 flex justify-center"
-          aria-label="Product navigation"
-        >
-          {products.map((_, index) => (
-            <motion.button
-              key={index}
-              className={`w-3 h-3 rounded-full mx-1 ${
-                index === currentIndex ? "bg-blue-500" : "bg-gray-300"
-              }`}
-              onClick={() => setCurrentIndex(index)}
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.8 }}
-              aria-label={`Go to product ${index + 1}`}
-              aria-current={index === currentIndex ? "true" : "false"}
-            />
-          ))}
-        </nav>
-      </section>
-
-      <section className="flex text-black">
-        <article className="shadow-2xl card">
-          <img src="/medialunas.jpg" alt="Medialunas" className="w-50" />
-          <h3 className="m-4 text-xl text-center font-kindred">
-            Medialunas de manteca
-          </h3>
-          <p>
-            Las medialunas de manteca son uno de nuestros clásicos favoritos.
-            Están horneadas a la perfección con la mejor manteca. Son ideales
-            para acompañar un café o té, y siempre están frescas y listas para
-            disfrutar en cualquier momento del día.
-          </p>
-          <a href="#" className="underline">
-            Más información
-          </a>
-        </article>
-
-        <article className="shadow-2xl card">
-          <img src="/baguette.jpg" alt="Baguette" className="w-50" />
-          <h3 className="m-4 text-xl text-center font-kindred">Baguette</h3>
-          <p>
-            Nuestra baguette es una delicia crujiente por fuera y tierna por
-            dentro. Con una corteza dorada y un sabor auténtico, es perfecta
-            para acompañar cualquier comida o para disfrutar sola. Hecha con
-            ingredientes de la mejor calidad, es un clásico de la panadería que
-            nunca pasa de moda.
-          </p>
-          <a href="#" className="underline">
-            Más información
-          </a>
-        </article>
-
-        <article className="shadow-2xl card">
-          <img src="/budin.jpg" alt="Budín de chocolate" className="w-50" />
-          <h3 className="m-4 text-xl text-center font-kindred">
-            Budín de chocolate
-          </h3>
-          <p>
-            Nuestro budín de chocolate es una delicia irresistible, con una
-            textura suave y esponjosa que se deshace en la boca. Hecho con cacao
-            de alta calidad y trozos de chocolate, ofrece un sabor profundo y
-            rico que complace a los amantes del chocolate.
-          </p>
-          <a href="#" className="underline">
-            Más información
-          </a>
-        </article>
       </section>
     </main>
   );
