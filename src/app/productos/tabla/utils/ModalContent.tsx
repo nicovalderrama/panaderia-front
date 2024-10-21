@@ -1,10 +1,18 @@
+import { useState } from "react"
 import { Producto } from "../page"
 
 interface iProps {
     setOpen: any,
-    row?: Producto|null
+    row: Producto
+    onAddToCart: (product: Producto, quantity: number) => void
 }
-export const ModalContent = ({ setOpen, row}:iProps) => {
+
+export const ModalContent = ({ setOpen, row, onAddToCart}:iProps) => {
+  const [quantity, setQuantity] = useState(1)
+  const handleCart = (e: React.FormEvent) => {
+    e.preventDefault()
+    onAddToCart(row, quantity)
+  }
     return (
         <>
              <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
@@ -25,7 +33,8 @@ export const ModalContent = ({ setOpen, row}:iProps) => {
                 <input
                   type="number"
                   id="quantity"
-                  min="1"
+                  min="0"
+                  max={row?.cantidad_disponible}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
@@ -37,6 +46,7 @@ export const ModalContent = ({ setOpen, row}:iProps) => {
                   Cancelar
                 </button>
                 <button
+                onClick={handleCart}
                   className="px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                   Agregar
