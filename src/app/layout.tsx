@@ -22,7 +22,10 @@ export default function RootLayout({
     script2.noModule = true;
     script2.src = "https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js";
     document.head.appendChild(script2);
-
+    const link = document.createElement("link");
+    link.href = "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add_box"
+    link.rel = "stylesheet"
+    document.head.appendChild(link);
     return () => {
       document.head.removeChild(script1);
       document.head.removeChild(script2);
