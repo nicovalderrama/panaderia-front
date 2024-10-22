@@ -98,7 +98,7 @@ export default function ProductoPage() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="ml-4 flex-1 bg-amber-600 text-white font-semibold rounded-md py-3 px-8 flex items-center justify-center hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-all duration-200 ease-in-out"
+              className="ml-4 flex-1 bg-marron-oscuro text-white font-semibold rounded-md py-3 px-8 flex items-center justify-center hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500 transition-all duration-200 ease-in-out"
             >
               <FaShoppingCart className="mr-2" />
               Añadir al carrito

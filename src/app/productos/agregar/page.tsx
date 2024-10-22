@@ -14,7 +14,7 @@ interface ProductoValues {
   categoria: string;
   precio: number;
   cantidad_disponible: number;
-  imagen?: string; // Cambiado a string para la URL de la imagen
+  imagen?: string;
 }
 
 export default function AgregarProducto() {
@@ -100,9 +100,9 @@ export default function AgregarProducto() {
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileList = event.currentTarget.files;
     if (fileList && fileList.length > 0) {
-      setImage(fileList[0]); // Guardar la imagen seleccionada
+      setImage(fileList[0]);
     } else {
-      setImage(null); // Limpiar si no hay archivo
+      setImage(null);
     }
   };
 
