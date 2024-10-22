@@ -5,12 +5,13 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaUser, FaLock } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { AuthContext } from "../context/AuthContext"; // Asegúrate de que la ruta sea correcta
+import { AuthContext } from "../context/AuthContext";
+import Image from "next/image";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { setIsLoggedIn, setUserData } = useContext(AuthContext)!; // Asegúrate de manejar el contexto correctamente
+  const { setIsLoggedIn, setUserData } = useContext(AuthContext)!;
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -63,67 +64,96 @@ export default function Login() {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="flex items-center justify-center min-h-screen bg-gray-100"
+    <div
+      className="flex items-center justify-center min-h-screen bg-[#ebc68e]"
+      style={{
+        backgroundImage: `url('/trigo-patron.png')`,
+        backgroundRepeat: "repeat",
+        backgroundSize: "300px 300px", // Ajusta este valor según el tamaño de tu patrón
+      }}
     >
-      <form
-        onSubmit={handleLogin}
-        className="bg-white p-6 rounded shadow-md w-96"
-      >
-        <h2 className="text-2xl font-bold mb-4">Iniciar sesión</h2>
-
-        <div className="mb-4">
-          <label
-            htmlFor="username"
-            className="block text-sm font-medium text-gray-700"
-          >
-            Usuario
-          </label>
-          <div className="flex items-center border border-gray-300 rounded">
-            <FaUser className="ml-2" />
-            <input
-              type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              className="border-0 focus:outline-none flex-1 px-2"
-              placeholder="Ingrese su usuario"
-            />
-          </div>
+      <div className="flex max-w-4xl w-full bg-white rounded-lg shadow-xl overflow-hidden">
+        {/* Lado izquierdo con imagen */}
+        <div className="w-1/2 bg-[#735945] flex items-center justify-center p-8">
+          <Image
+            src="/logo-claro-elmana.png"
+            alt="El Maná Logo"
+            width={300}
+            height={300}
+            objectFit="contain"
+          />
         </div>
 
-        <div className="mb-4">
-          <label
-            htmlFor="password"
-            className="block text-sm font-medium text-gray-700"
+        {/* Lado derecho con formulario */}
+        <div className="w-1/2 p-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="max-w-md w-full mx-auto"
           >
-            Contraseña
-          </label>
-          <div className="flex items-center border border-gray-300 rounded">
-            <FaLock className="ml-2" />
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="border-0 focus:outline-none flex-1 px-2"
-              placeholder="Ingrese su contraseña"
-            />
-          </div>
-        </div>
+            <h2 className="text-3xl font-bold mb-6 text-center text-[#735945]">
+              Iniciar sesión
+            </h2>
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div>
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-medium text-[#735945]"
+                >
+                  Usuario
+                </label>
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <FaUser className="h-5 w-5 text-[#735945]" />
+                  </div>
+                  <input
+                    type="text"
+                    id="username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                    className="block w-full pl-10 pr-3 py-2 border border-[#ebc68e] rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#8b563b] focus:border-[#8b563b] sm:text-sm"
+                    placeholder="Ingrese su usuario"
+                  />
+                </div>
+              </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition duration-200"
-        >
-          Iniciar sesión
-        </button>
-      </form>
-    </motion.div>
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-medium text-[#735945]"
+                >
+                  Contraseña
+                </label>
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <FaLock className="h-5 w-5 text-[#735945]" />
+                  </div>
+                  <input
+                    type="password"
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className="block w-full pl-10 pr-3 py-2 border border-[#ebc68e] rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#8b563b] focus:border-[#8b563b] sm:text-sm"
+                    placeholder="Ingrese su contraseña"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <button
+                  type="submit"
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#8b563b] hover:bg-[#735945] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ebc68e] transition duration-150 ease-in-out"
+                >
+                  Iniciar sesión
+                </button>
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      </div>
+    </div>
   );
 }

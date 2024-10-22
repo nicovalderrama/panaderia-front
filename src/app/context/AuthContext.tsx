@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 
 interface User {
   id: number;
@@ -24,9 +30,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState<User | null>(null);
 
+  useEffect(() => {
+    // Verificar si hay datos de usuario en localStorage al cargar la página
+    const storedUserData = localStorage.getItem("user_data");
+    const accessToken = localStorage.getItem("access_token");
+
+    if (storedUserData && accessToken) {
+      const parsedUserData = JSON.parse(storedUserData);
+      setIsLoggedIn(true);
+      setUserData(parsedUserData);
+    }
+  }, []);
+
   const login = (user: User) => {
     setIsLoggedIn(true);
     setUserData(user);
+    localStorage.setItem("user_data", JSON.stringify(user));
+    // Asegúrate de que el token de acceso se guarde en el localStorage en la función de login
+    // localStorage.setItem("access_token", accessToken);
   };
 
   const logout = () => {
