@@ -5,6 +5,7 @@ import Footer from "./components/footer";
 import { ReactNode, useEffect } from "react";
 import { Bounce, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AuthProvider } from "./context/AuthContext";
 
 export default function RootLayout({
   children,
@@ -23,8 +24,9 @@ export default function RootLayout({
     script2.src = "https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js";
     document.head.appendChild(script2);
     const link = document.createElement("link");
-    link.href = "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add_box"
-    link.rel = "stylesheet"
+    link.href =
+      "https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add_box";
+    link.rel = "stylesheet";
     document.head.appendChild(link);
     return () => {
       document.head.removeChild(script1);
@@ -47,11 +49,13 @@ export default function RootLayout({
           theme="light"
           transition={Bounce}
         />
-        <Header />
+        <AuthProvider>
+          <Header />
 
-        <main className="flex-grow">{children}</main>
+          <main className="flex-grow">{children}</main>
 
-        <Footer />
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );
