@@ -1,11 +1,5 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useEffect,
-} from "react";
-
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import router from "next/navigation";
 interface User {
   id: number;
   username: string;
@@ -18,7 +12,7 @@ interface AuthContextType {
   userData: User | null;
   setIsLoggedIn: (value: boolean) => void;
   setUserData: (user: User | null) => void;
-  login: (user: User) => void;
+  login: (user: User, accessToken: string, refreshToken: string) => void;
   logout: () => void;
 }
 
@@ -30,24 +24,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState<User | null>(null);
 
-  useEffect(() => {
-    // Verificar si hay datos de usuario en localStorage al cargar la página
-    const storedUserData = localStorage.getItem("user_data");
-    const accessToken = localStorage.getItem("access_token");
-
-    if (storedUserData && accessToken) {
-      const parsedUserData = JSON.parse(storedUserData);
-      setIsLoggedIn(true);
-      setUserData(parsedUserData);
-    }
-  }, []);
-
   const login = (user: User) => {
     setIsLoggedIn(true);
     setUserData(user);
-    localStorage.setItem("user_data", JSON.stringify(user));
-    // Asegúrate de que el token de acceso se guarde en el localStorage en la función de login
-    // localStorage.setItem("access_token", accessToken);
   };
 
   const logout = () => {
@@ -56,6 +35,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("user_data");
+    router.push("/login");
+  };
+
+  const isPublicRoute = (path: string) => {
+    const publicRoutes = ["/login", "/register", "/forgot-password"];
+    return publicRoutes.includes(path);
   };
 
   return (

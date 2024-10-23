@@ -41,23 +41,24 @@ export default function Header() {
     >
       <nav className="flex items-center justify-between px-1 py-1 pl-4 pr-4">
         <div className="flex-1">
+          {!isLoggedIn ? 
           <ul className="flex justify-start">
-            <li className="pr-3">
-              <Link href="/productos" className="hover:underline">
-                Productos
-              </Link>
-            </li>
-            <li className="pr-3">
-              <Link href="/sobre-nosotros" className="hover:underline">
-                Sobre nosotros
-              </Link>
-            </li>
-            <li className="pr-3">
-              <Link href="/contacto" className="hover:underline">
-                Contacto
-              </Link>
-            </li>
-          </ul>
+          <li className="pr-3">
+            <Link href="/productos" className="hover:underline">
+              Productos
+            </Link>
+          </li>
+          <li className="pr-3">
+            <Link href="/sobre-nosotros" className="hover:underline">
+              Sobre nosotros
+            </Link>
+          </li>
+          <li className="pr-3">
+            <Link href="/contacto" className="hover:underline">
+              Contacto
+            </Link>
+          </li>
+        </ul> : ''}
         </div>
         <div className="flex-shrink-0">
           <Link href="/">

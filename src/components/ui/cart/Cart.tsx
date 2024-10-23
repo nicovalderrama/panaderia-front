@@ -1,29 +1,70 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { ShoppingCart, X } from 'lucide-react'
+import { CarTaxiFrontIcon, ShoppingCart, X } from 'lucide-react'
+import { Producto } from '@/app/productos/tabla/page';
 
 interface CartItem {
-    id: number
-    name: string
-    price: number
-    quantity: number
+    producto: Producto,
+    quantity: number;
 }
-export const Cart = () => {
+interface IProps {
+    itemsCart: CartItem[]
+}
+export const Cart = ({itemsCart}:IProps) => {
     const [isOpen, setIsOpen] = useState(false)
     const [items, setItems] = useState<CartItem[]>([
-        { id: 1, name: "Producto 1", price: 19.99, quantity: 2 },
-        { id: 2, name: "Producto 2", price: 29.99, quantity: 1 },
     ])
-
+    useEffect(() =>{
+        setItems(itemsCart);
+    }, [itemsCart])
     const toggleCart = () => setIsOpen(!isOpen)
 
     const removeItem = (id: number) => {
-        setItems(items.filter(item => item.id !== id))
+        setItems(items.filter(item => item.producto.id !== id))
     }
-
-    const totalPrice = items.reduce((total, item) => total + item.price * item.quantity, 0)
+    const handleBuy = async () =>{
+            const productTotal = items.map(data => {
+                return {
+                    cantidad: data.quantity,
+                    producto: data.producto.id,
+                    monto_total: 123123,
+                }
+            })
+            console.log(items)
+            try {
+              // Datos de la venta
+              const ventaData = {
+                fecha_venta: new Date().toISOString().split('T')[0],  // Fecha actual
+                tipo_venta: "Online",
+                forma_pago: "Tarjeta",
+                tipo_comprobante: "Factura",
+                numero_comprobante: "001-00012345",
+                cliente: 1,
+                items: productTotal,
+              };
+          
+              const response = await fetch('http://localhost:8000/venta/', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(ventaData),
+              });
+          
+              if (!response.ok) {
+                throw new Error('Error al registrar la venta');
+              }
+          
+              const result = await response.json();
+              console.log('Venta registrada exitosamente', result);
+            } catch (error) {
+              console.error(error);
+            }
+          
+    }
+    const totalPrice = items.reduce((total, item) => total + item.producto.precio * item.quantity, 0)
     return (
         <>
             <button
@@ -56,7 +97,7 @@ export const Cart = () => {
                                 <>
                                     {items.map((item) => (
                                         <motion.div
-                                            key={item.id}
+                                            key={item.producto.id}
                                             initial={{ opacity: 0, y: 20 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, y: -20 }}
@@ -64,13 +105,13 @@ export const Cart = () => {
                                             className="flex justify-between items-center border-b py-2"
                                         >
                                             <div>
-                                                <p className="font-semibold">{item.name}</p>
+                                                <p className="font-semibold">{item.producto.nombre}</p>
                                                 <p className="text-sm text-gray-500">
-                                                    {item.quantity} x ${item.price.toFixed(2)}
+                                                    {item.quantity} x ${item.producto.precio}
                                                 </p>
                                             </div>
                                             <button
-                                                onClick={() => removeItem(item.id)}
+                                                onClick={() => removeItem(item.producto.id)}
                                                 className="text-red-500 hover:text-red-700"
                                             >
                                                 <X size={18} />
@@ -80,9 +121,9 @@ export const Cart = () => {
 
                                     <div className="mt-4">
                                         <p className="font-bold text-lg">
-                                            Total: ${totalPrice.toFixed(2)}
+                                            Total: ${totalPrice}
                                         </p>
-                                        <button className="w-full bg-blue-500 text-white py-2 px-4 rounded mt-2 hover:bg-blue-600 transition-colors">
+                                        <button onClick={handleBuy} className="w-full bg-blue-500 text-white py-2 px-4 rounded mt-2 hover:bg-blue-600 transition-colors">
                                             Proceder al pago
                                         </button>
                                     </div>
