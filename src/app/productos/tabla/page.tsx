@@ -8,6 +8,7 @@ import { ModalContent } from "./utils/ModalContent";
 import { AnimatePresence, motion } from "framer-motion";
 import { Plus, ShoppingCart } from "lucide-react";
 import ProductCard from "./utils/ProductCart";
+import { PagoContent } from "./utils/pagoContent";
 
 export interface Producto {
     id: number;
@@ -18,7 +19,7 @@ export interface Producto {
     categoria: string;
     imagen: string;
 }
-interface CartItem {
+export interface CartItem {
     producto: Producto,
     quantity: number;
 }
@@ -26,26 +27,28 @@ interface CartItem {
 export default function Page() {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL;
     const [productos, setProductos] = useState<Producto[]>([]);
-    const [row, setRow] = useState<Producto>({
-        id: 0,
-        nombre: '',
-        descripcion: '',
-        precio: 0,
-        cantidad_disponible: 0,
-        categoria: '',
-        imagen: '',
-    });
     const [open, setOpen] = useState<boolean>(false);
     const [cartItems, setCartItems] = useState<CartItem[]>([])
-    const actions = [
-        {
-            label: 'add_box',
-            onClick: (item: Producto) => {
-                setOpen(true)
-                setRow(item)
-            },
-        }
-    ]
+    const [modalPago, setModalPago] = useState<boolean>(false);
+    // const [row, setRow] = useState<Producto>({
+    //     id: 0,
+    //     nombre: '',
+    //     descripcion: '',
+    //     precio: 0,
+    //     cantidad_disponible: 0,
+    //     categoria: '',
+    //     imagen: '',
+    // });
+
+    // const actions = [
+    //     {
+    //         label: 'add_box',
+    //         onClick: (item: Producto) => {
+    //             setOpen(true)
+    //             setRow(item)
+    //         },
+    //     }
+    // ]
     useEffect(() => {
         fetch(apiUrl + "/productos/")
             .then((response) => response.json())
@@ -69,12 +72,17 @@ export default function Page() {
         setOpen(false)
     }
     const removeItem = (id: number) => {
+        console.log(id)
         setCartItems(cartItems.filter(item => item.producto.id !== id))
     }
+  
     return (
         <div className="container mx-auto p-4">
             <ModalComponent isOpen={open} onClose={() => console.log()}>
-                <ModalContent setOpen={setOpen} onAddToCart={handleAddToCart} productos={productos} />
+             <ModalContent setOpen={setOpen} onAddToCart={handleAddToCart} productos={productos} />
+            </ModalComponent>
+            <ModalComponent isOpen={modalPago} onClose={() => console.log()}>
+             <PagoContent setModalPago = {setModalPago} cartItems={cartItems} />
             </ModalComponent>
             <div>
                 {/* <Cart itemsCart = {cartItems}/> */}
@@ -84,7 +92,7 @@ export default function Page() {
                     <h1 className="text-2xl font-bold mr-8">Gestion de Venta</h1>
                     <div className="flex">
                         <motion.button
-                            onClick={() => setOpen(true)}
+                            onClick={() =>setOpen(true)}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             className="flex items-center mr-2 justify-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
@@ -93,7 +101,8 @@ export default function Page() {
                             Agregar Producto
                         </motion.button>
                         <motion.button
-                            onClick={() => setOpen(true)}
+                            disabled={cartItems.length ? false:true}
+                            onClick={() => setModalPago(true)}
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             className="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
@@ -111,7 +120,7 @@ export default function Page() {
                         : 'loading'
                 } */}
                 <AnimatePresence mode="wait">
-                    {cartItems.length === 0 ? (
+                    {!cartItems.length ? (
                         <motion.div
                             key="empty"
                             initial={{ opacity: 0, y: 50 }}
@@ -124,8 +133,8 @@ export default function Page() {
                             <h2 className="text-2xl font-bold text-gray-700 mb-4">Tu carrito está vacío</h2>
 
                         </motion.div>
-                    ) : cartItems.map((product) => (
-                        <ProductCard product={product.producto} quantity={product.quantity} removeItems={removeItem} />
+                    ) : cartItems.map((product,i) => (
+                        <ProductCard key={i} product={product.producto} quantity={product.quantity} removeItems={removeItem} />
                     ))
 
                     }
