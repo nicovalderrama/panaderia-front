@@ -73,7 +73,7 @@ const Aside = ({ className }: AsideProps) => {
                     >
                       <li>
                         <Link
-                          href="/gestion_productos"
+                          href="/productos/gestionar"
                           className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
                         >
                           Gestionar productos
@@ -130,7 +130,7 @@ const Aside = ({ className }: AsideProps) => {
                     >
                       <li>
                         <Link
-                          href="/registrar_venta"
+                          href="/productos/tabla"
                           className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
                         >
                           Registrar venta
@@ -179,7 +179,7 @@ const Aside = ({ className }: AsideProps) => {
                     >
                       <li>
                         <Link
-                          href="/realizar_pedido"
+                          href="/dashboard/pedidos/realizar"
                           className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
                         >
                           Realizar pedido
@@ -201,7 +201,7 @@ const Aside = ({ className }: AsideProps) => {
 
             <li>
               <Link
-                href="/inventario"
+                href="/dashboard/inventario"
                 className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
               >
                 Inventario
