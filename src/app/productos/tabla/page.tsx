@@ -29,6 +29,7 @@ export default function Page() {
     const [productos, setProductos] = useState<Producto[]>([]);
     const [open, setOpen] = useState<boolean>(false);
     const [cartItems, setCartItems] = useState<CartItem[]>([])
+    const [total, setTotal] = useState<number>(0);
     const [modalPago, setModalPago] = useState<boolean>(false);
     // const [row, setRow] = useState<Producto>({
     //     id: 0,
@@ -54,7 +55,11 @@ export default function Page() {
             .then((response) => response.json())
             .then((data) => setProductos(data))
             .catch((error) => console.error(error));
+        
     }, [])
+    useEffect(() =>{
+        getTotal();
+    },[cartItems])
     const handleAddToCart = (product: Producto | null, quantity: number) => {
         product ?
             setCartItems(prevItems => {
@@ -69,49 +74,54 @@ export default function Page() {
                     return [...prevItems, { producto: product, quantity }]
                 }
             }) : setOpen(false)
-        setOpen(false)
+
     }
-    const removeItem = (id: number) => {
-        console.log(id)
-        setCartItems(cartItems.filter(item => item.producto.id !== id))
-    }
-  
+    const removeItem = (id: number) => setCartItems(cartItems.filter(item => item.producto.id !== id))
+    const getTotal = () => setTotal(cartItems.reduce((total, item) => total + item.producto.precio * item.quantity, 0))
+
+
+
     return (
         <div className="container mx-auto p-4">
             <ModalComponent isOpen={open} onClose={() => console.log()}>
-             <ModalContent setOpen={setOpen} onAddToCart={handleAddToCart} productos={productos} />
+                <ModalContent setOpen={setOpen} onAddToCart={handleAddToCart} productos={productos} />
             </ModalComponent>
             <ModalComponent isOpen={modalPago} onClose={() => console.log()}>
-             <PagoContent setModalPago = {setModalPago} cartItems={cartItems} />
+                <PagoContent setModalPago={setModalPago} cartItems={cartItems} total={ total}/>
             </ModalComponent>
             <div>
                 {/* <Cart itemsCart = {cartItems}/> */}
             </div>
             <div>
-                <div className="flex items-center mb-4">
-                    <h1 className="text-2xl font-bold mr-8">Gestion de Venta</h1>
-                    <div className="flex">
-                        <motion.button
-                            onClick={() =>setOpen(true)}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="flex items-center mr-2 justify-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-                        >
-                            <Plus size={20} className="mr-2" />
-                            Agregar Producto
-                        </motion.button>
-                        <motion.button
-                            disabled={cartItems.length ? false:true}
-                            onClick={() => setModalPago(true)}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-                        >
-                            <FaCartArrowDown />
-                            <p className="ml-2">
-                                Procesar el pago
-                            </p>
-                        </motion.button>
+                <div className="flex justify-between mb-4">
+                    <div className="flex items-center ">
+                        <h1 className="text-2xl font-bold mr-8">Gestion de Venta</h1>
+                        <div className="flex">
+                            <motion.button
+                                onClick={() => setOpen(true)}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="flex items-center mr-2 justify-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                            >
+                                <Plus size={20} className="mr-2" />
+                                Agregar Producto
+                            </motion.button>
+                            <motion.button
+                                disabled={cartItems.length ? false : true}
+                                onClick={() => setModalPago(true)}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="flex items-center justify-center px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+                            >
+                                <FaCartArrowDown />
+                                <p className="ml-2">
+                                    Procesar el pago
+                                </p>
+                            </motion.button>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 className="text-2xl font-bold text-gray-700 mb-4">Total: ${total}</h2>
                     </div>
                 </div>
                 {/* {
@@ -133,7 +143,7 @@ export default function Page() {
                             <h2 className="text-2xl font-bold text-gray-700 mb-4">Tu carrito está vacío</h2>
 
                         </motion.div>
-                    ) : cartItems.map((product,i) => (
+                    ) : cartItems.map((product, i) => (
                         <ProductCard key={i} product={product.producto} quantity={product.quantity} removeItems={removeItem} />
                     ))
 

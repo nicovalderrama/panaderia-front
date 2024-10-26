@@ -136,7 +136,7 @@ export const ModalContent = ({ setOpen, productos, onAddToCart }: iProps) => {
                 <div className="flex justify-end space-x-3">
                   <button
                     type="submit"
-                    disabled={isSubmitting}
+                    disabled={(isSubmitting || selectedProduct.cantidad_disponible ? false : true)}
                     className="px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
                   >
                     Agregar

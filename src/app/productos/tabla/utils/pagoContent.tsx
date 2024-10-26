@@ -42,10 +42,11 @@ interface Client {
 interface IProps {
     setModalPago: Dispatch<SetStateAction<boolean>>;
     cartItems: CartItem[];
+    total: number;
 
 }
 
-export const PagoContent = ({ setModalPago, cartItems }: IProps) => {
+export const PagoContent = ({ setModalPago, cartItems, total }: IProps) => {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
 
     const handleSubmit = async (values: SaleFormData, { setSubmitting }: any) => {
@@ -57,7 +58,6 @@ export const PagoContent = ({ setModalPago, cartItems }: IProps) => {
                     monto_total: 123123,
                 }
             })
-            console.log('--->',selectedClient)
             try {
               const ventaData = {
                 fecha_venta,  
@@ -67,6 +67,7 @@ export const PagoContent = ({ setModalPago, cartItems }: IProps) => {
                 numero_comprobante,
                 cliente: selectedClient?.id,
                 items: productTotal,
+                total_monto_venta: total,
               };
           
               const response = await fetch('http://localhost:8000/venta/', {
