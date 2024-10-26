@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 interface AsideProps {
   className?: string;
@@ -9,8 +10,13 @@ interface AsideProps {
 
 const Aside = ({ className }: AsideProps) => {
   const [isProductosOpen, setProductosOpen] = useState(false);
+  const [isVentasOpen, setVentasOpen] = useState(false);
   const [isProveedoresOpen, setProveedoresOpen] = useState(false);
   const [isCuentaOpen, setCuentaOpen] = useState(false);
+  const { logout } = useAuth();
+
+  const activeStyle = "bg-[#ebc68e] text-gray-700";
+  const inactiveStyle = "hover:bg-[#ebc68e] hover:text-gray-700";
 
   return (
     <aside className={`h-full bg-[#735945] text-white ${className}`}>
@@ -34,9 +40,11 @@ const Aside = ({ className }: AsideProps) => {
               <div>
                 <button
                   onClick={() => setProductosOpen(!isProductosOpen)}
-                  className="flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${
+                    isProductosOpen ? activeStyle : inactiveStyle
+                  }`}
                 >
-                  <span> Productos </span>
+                  <span>Productos</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className={`transition duration-300 ${
@@ -65,7 +73,7 @@ const Aside = ({ className }: AsideProps) => {
                     >
                       <li>
                         <Link
-                          href="/gestion_productos"
+                          href="/productos/gestionar"
                           className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
                         >
                           Gestionar productos
@@ -86,21 +94,63 @@ const Aside = ({ className }: AsideProps) => {
             </li>
 
             <li>
-              <Link
-                href="/inventario"
-                className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
-              >
-                Inventario
-              </Link>
+              <div>
+                <button
+                  onClick={() => setVentasOpen(!isVentasOpen)}
+                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${
+                    isVentasOpen ? activeStyle : inactiveStyle
+                  }`}
+                >
+                  <span>Ventas</span>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={`transition duration-300 ${
+                      isVentasOpen ? "rotate-180" : ""
+                    }`}
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    width="20"
+                    height="20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </button>
+                <AnimatePresence>
+                  {isVentasOpen && (
+                    <motion.ul
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                      className="px-4 mt-2 space-y-1"
+                    >
+                      <li>
+                        <Link
+                          href="/productos/tabla"
+                          className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                        >
+                          Registrar venta
+                        </Link>
+                      </li>
+                    </motion.ul>
+                  )}
+                </AnimatePresence>
+              </div>
             </li>
 
             <li>
               <div>
                 <button
                   onClick={() => setProveedoresOpen(!isProveedoresOpen)}
-                  className="flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${
+                    isProveedoresOpen ? activeStyle : inactiveStyle
+                  }`}
                 >
-                  <span> Proveedores </span>
+                  <span>Proveedores</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className={`transition duration-300 ${
@@ -129,7 +179,7 @@ const Aside = ({ className }: AsideProps) => {
                     >
                       <li>
                         <Link
-                          href="/realizar_pedido"
+                          href="/dashboard/pedidos/realizar"
                           className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
                         >
                           Realizar pedido
@@ -137,10 +187,10 @@ const Aside = ({ className }: AsideProps) => {
                       </li>
                       <li>
                         <Link
-                          href="/registrar_pedido"
+                          href="/registrar_recepcion"
                           className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
                         >
-                          Registrar pedido
+                          Registrar recepción
                         </Link>
                       </li>
                     </motion.ul>
@@ -150,12 +200,23 @@ const Aside = ({ className }: AsideProps) => {
             </li>
 
             <li>
+              <Link
+                href="/dashboard/inventario"
+                className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+              >
+                Inventario
+              </Link>
+            </li>
+
+            <li>
               <div>
                 <button
                   onClick={() => setCuentaOpen(!isCuentaOpen)}
-                  className="flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${
+                    isCuentaOpen ? activeStyle : inactiveStyle
+                  }`}
                 >
-                  <span> Cuenta </span>
+                  <span>Cuenta</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className={`transition duration-300 ${
@@ -183,30 +244,12 @@ const Aside = ({ className }: AsideProps) => {
                       className="px-4 mt-2 space-y-1"
                     >
                       <li>
-                        <Link
-                          href="/mi_informacion"
-                          className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                        <button
+                          onClick={logout}
+                          className="w-full text-left px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
                         >
-                          Mi información
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href="/seguridad"
-                          className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
-                        >
-                          Seguridad
-                        </Link>
-                      </li>
-                      <li>
-                        <form action="#" method="POST">
-                          <button
-                            type="submit"
-                            className="w-full rounded-lg px-4 py-2 text-sm font-medium text-left hover:bg-[#ebc68e] hover:text-gray-700"
-                          >
-                            Cerrar sesión
-                          </button>
-                        </form>
+                          Cerrar sesión
+                        </button>
                       </li>
                     </motion.ul>
                   )}
@@ -214,24 +257,6 @@ const Aside = ({ className }: AsideProps) => {
               </div>
             </li>
           </ul>
-        </div>
-
-        <div className="sticky inset-x-0 bottom-0 border-t border-black-500">
-          <Link href="#" className="flex items-center gap-2 p-4 bg-[#8b563b]">
-            <img
-              alt=""
-              src="/user.png"
-              className="object-cover rounded-full size-10"
-            />
-            <div>
-              <p className="text-xs">
-                <strong className="block font-medium">
-                  Nicolás Valderrama
-                </strong>
-                <span> nico@elmana.com </span>
-              </p>
-            </div>
-          </Link>
         </div>
       </div>
     </aside>

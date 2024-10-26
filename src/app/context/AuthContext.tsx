@@ -1,6 +1,5 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
-import { useRouter } from 'next/navigation';
-
+import React, { createContext, useContext, useState, ReactNode } from "react";
+import { useRouter } from "next/navigation";
 interface User {
   id: number;
   username: string;
@@ -22,29 +21,13 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const router = useRouter();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userData, setUserData] = useState<User | null>(null);
-  const router = useRouter();
 
-  useEffect(() => {
-    const accessToken = localStorage.getItem("access_token");
-    const userDataString = localStorage.getItem("user_data");
-
-    if (accessToken && userDataString) {
-      const user = JSON.parse(userDataString);
-      setIsLoggedIn(true);
-      setUserData(user);
-    } else if (!isPublicRoute('')) {
-      router.push('/login');
-    }
-  }, [router]);
-
-  const login = (user: User, accessToken: string, refreshToken: string) => {
+  const login = (user: User) => {
     setIsLoggedIn(true);
     setUserData(user);
-    localStorage.setItem("access_token", accessToken);
-    localStorage.setItem("refresh_token", refreshToken);
-    localStorage.setItem("user_data", JSON.stringify(user));
   };
 
   const logout = () => {
@@ -53,11 +36,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("user_data");
-    router.push('/login');
+    router.push("/login");
   };
 
   const isPublicRoute = (path: string) => {
-    const publicRoutes = ['/login', '/register', '/forgot-password'];
+    const publicRoutes = ["/login", "/register", "/forgot-password"];
     return publicRoutes.includes(path);
   };
 
