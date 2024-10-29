@@ -80,17 +80,6 @@ const CrearPedido: React.FC = () => {
                 pedido: pedidoId,
               };
               await axios.post("http://localhost:8000/item-pedido/", itemData);
-
-              const insumoActual = insumos.find((i) => i.id === insumo.id);
-              if (insumoActual) {
-                await axios.patch(
-                  `http://localhost:8000/insumos/${insumo.id}/`,
-                  {
-                    stock_actual:
-                      insumoActual.stock_actual + parseFloat(insumo.cantidad), // aumentamos la cantidad disponible cuando se reañiza un pedido
-                  }
-                );
-              }
             }
           })
         );
