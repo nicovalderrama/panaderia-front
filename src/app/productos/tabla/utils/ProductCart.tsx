@@ -36,6 +36,7 @@ export default function ProductCard({ product, quantity, removeItems }: ProductC
           <h3 className="text-lg font-semibold mb-2">{product.nombre}</h3>
           <p className="text-sm text-gray-600 mb-2">{product.descripcion}</p>
           <p className="text-sm text-gray-500 mb-2">Categoría: {product.categoria}</p>
+          
           <div className="flex justify-between items-center">
             <p className="text-lg font-bold text-blue-600">${product.precio}</p>
             <div className="flex items-center">
