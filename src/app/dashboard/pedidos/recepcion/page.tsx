@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { FaCheck } from "react-icons/fa";
+import DashboardPage from "../../page";
 
 interface Pedido {
   id: number;
@@ -112,62 +113,64 @@ const RecepcionPedido: React.FC = () => {
   }, [formik.values.pedidoId]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <form onSubmit={formik.handleSubmit} className="p-4 border rounded">
-        <h2 className="text-lg font-bold mb-4">Recepción de Pedido</h2>
+    <DashboardPage>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <form onSubmit={formik.handleSubmit} className="p-4 border rounded">
+          <h2 className="text-lg font-bold mb-4">Recepción de Pedido</h2>
 
-        <div className="mb-4">
-          <label className="block">Pedido:</label>
-          <select
-            {...formik.getFieldProps("pedidoId")}
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-          >
-            <option value="">Seleccionar pedido</option>
-            {pedidos.map((pedido) => (
-              <option key={pedido.id} value={pedido.id}>
-                {pedido.numero_pedido}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {formik.values.pedidoId && (
           <div className="mb-4">
-            <label className="block">Empleado que recibe:</label>
+            <label className="block">Pedido:</label>
             <select
-              {...formik.getFieldProps("recibidoPorId")}
+              {...formik.getFieldProps("pedidoId")}
               className="mt-1 block w-full border border-gray-300 rounded-md p-2"
             >
-              <option value="">Seleccionar empleado</option>
-              {empleados.map((empleado) => (
-                <option key={empleado.id} value={empleado.id}>
-                  {empleado.nombre}
+              <option value="">Seleccionar pedido</option>
+              {pedidos.map((pedido) => (
+                <option key={pedido.id} value={pedido.id}>
+                  {pedido.numero_pedido}
                 </option>
               ))}
             </select>
           </div>
-        )}
 
-        <div className="mb-4">
-          <label className="block">Observaciones:</label>
-          <textarea
-            {...formik.getFieldProps("observaciones")}
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-          />
-        </div>
+          {formik.values.pedidoId && (
+            <div className="mb-4">
+              <label className="block">Empleado que recibe:</label>
+              <select
+                {...formik.getFieldProps("recibidoPorId")}
+                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              >
+                <option value="">Seleccionar empleado</option>
+                {empleados.map((empleado) => (
+                  <option key={empleado.id} value={empleado.id}>
+                    {empleado.nombre}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
-        <button
-          type="submit"
-          className="flex items-center bg-green-500 text-white p-2 rounded"
-        >
-          <FaCheck className="mr-2" /> Registrar Recepción
-        </button>
-      </form>
-    </motion.div>
+          <div className="mb-4">
+            <label className="block">Observaciones:</label>
+            <textarea
+              {...formik.getFieldProps("observaciones")}
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="flex items-center bg-green-500 text-white p-2 rounded"
+          >
+            <FaCheck className="mr-2" /> Registrar Recepción
+          </button>
+        </form>
+      </motion.div>
+    </DashboardPage>
   );
 };
 

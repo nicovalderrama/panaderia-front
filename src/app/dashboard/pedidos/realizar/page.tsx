@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { FaPlus } from "react-icons/fa";
+import DashboardPage from "../../page";
 
 interface Insumo {
   id: number;
@@ -130,91 +131,92 @@ const CrearPedido: React.FC = () => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
-      <form onSubmit={formik.handleSubmit} className="p-4 border rounded">
-        <h2 className="text-lg font-bold mb-4">Crear Pedido</h2>
+    <DashboardPage>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <form onSubmit={formik.handleSubmit} className="p-4 border rounded">
+          <h2 className="text-lg font-bold mb-4">Crear Pedido</h2>
 
-        <div className="mb-4">
-          <label className="block">Proveedor:</label>
-          <select
-            {...formik.getFieldProps("proveedorId")}
-            onChange={handleProveedorChange}
-            className={`mt-1 block w-full border ${
-              formik.touched.proveedorId && formik.errors.proveedorId
-                ? "border-red-500"
-                : "border-gray-300"
-            } rounded-md p-2`}
-          >
-            <option value="">Seleccionar proveedor</option>
-            {proveedores.map((proveedor) => (
-              <option key={proveedor.id} value={proveedor.id}>
-                {proveedor.nombre}
-              </option>
-            ))}
-          </select>
-          {formik.touched.proveedorId && formik.errors.proveedorId && (
-            <div className="text-red-500">{formik.errors.proveedorId}</div>
-          )}
-        </div>
-
-        {noInsumosMessage && (
-          <div className="text-red-500 mb-4">{noInsumosMessage}</div>
-        )}
-
-        {filteredInsumos.length > 0 && (
           <div className="mb-4">
-            <label className="block">Insumos:</label>
-            {filteredInsumos.map((insumo) => {
-              const selectedInsumo = selectedInsumos.find(
-                (item) => item.id === insumo.id
-              );
-              return (
-                <div key={insumo.id} className="flex items-center mb-2">
-                  <input
-                    type="checkbox"
-                    checked={!!selectedInsumo}
-                    onChange={(e) =>
-                      handleInsumoChange(insumo.id, e.target.checked)
-                    }
-                    className="mr-2"
-                  />
-                  <span className="mr-2">{insumo.nombre}</span>
-                  <input
-                    type="text"
-                    placeholder="0"
-                    value={selectedInsumo?.cantidad || ""}
-                    onChange={(e) =>
-                      handleCantidadChange(insumo.id, e.target.value)
-                    }
-                    className="border border-gray-300 rounded-md p-1 w-16"
-                    disabled={!selectedInsumo}
-                  />
-                </div>
-              );
-            })}
+            <label className="block">Proveedor:</label>
+            <select
+              {...formik.getFieldProps("proveedorId")}
+              onChange={handleProveedorChange}
+              className={`mt-1 block w-full border ${formik.touched.proveedorId && formik.errors.proveedorId
+                  ? "border-red-500"
+                  : "border-gray-300"
+                } rounded-md p-2`}
+            >
+              <option value="">Seleccionar proveedor</option>
+              {proveedores.map((proveedor) => (
+                <option key={proveedor.id} value={proveedor.id}>
+                  {proveedor.nombre}
+                </option>
+              ))}
+            </select>
+            {formik.touched.proveedorId && formik.errors.proveedorId && (
+              <div className="text-red-500">{formik.errors.proveedorId}</div>
+            )}
           </div>
-        )}
 
-        <div className="mb-4">
-          <label className="block">Observaciones:</label>
-          <textarea
-            {...formik.getFieldProps("observaciones")}
-            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-          />
-        </div>
+          {noInsumosMessage && (
+            <div className="text-red-500 mb-4">{noInsumosMessage}</div>
+          )}
 
-        <button
-          type="submit"
-          className="flex items-center bg-blue-500 text-white p-2 rounded"
-        >
-          <FaPlus className="mr-2" /> Crear Pedido
-        </button>
-      </form>
-    </motion.div>
+          {filteredInsumos.length > 0 && (
+            <div className="mb-4">
+              <label className="block">Insumos:</label>
+              {filteredInsumos.map((insumo) => {
+                const selectedInsumo = selectedInsumos.find(
+                  (item) => item.id === insumo.id
+                );
+                return (
+                  <div key={insumo.id} className="flex items-center mb-2">
+                    <input
+                      type="checkbox"
+                      checked={!!selectedInsumo}
+                      onChange={(e) =>
+                        handleInsumoChange(insumo.id, e.target.checked)
+                      }
+                      className="mr-2"
+                    />
+                    <span className="mr-2">{insumo.nombre}</span>
+                    <input
+                      type="text"
+                      placeholder="0"
+                      value={selectedInsumo?.cantidad || ""}
+                      onChange={(e) =>
+                        handleCantidadChange(insumo.id, e.target.value)
+                      }
+                      className="border border-gray-300 rounded-md p-1 w-16"
+                      disabled={!selectedInsumo}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          <div className="mb-4">
+            <label className="block">Observaciones:</label>
+            <textarea
+              {...formik.getFieldProps("observaciones")}
+              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="flex items-center bg-blue-500 text-white p-2 rounded"
+          >
+            <FaPlus className="mr-2" /> Crear Pedido
+          </button>
+        </form>
+      </motion.div>
+    </DashboardPage>
   );
 };
 

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { ModalComponent } from "../../../components/ui/modal/ModalComponent";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import DashboardPage from "../page";
 
 interface Proveedor {
   id: number;
@@ -75,7 +76,8 @@ const RealizarPedido = () => {
   };
 
   return (
-    <div className="p-6 bg-[#3f2f25ee] text-white min-h-screen flex flex-col">
+    <DashboardPage>
+      <div className="p-6 bg-white text-white min-h-screen flex flex-col">
       <h1 className="text-2xl font-bold mb-4">Realizar Pedido</h1>
       <div className="mb-6">
         <label htmlFor="proveedor" className="block text-lg mb-2">
@@ -157,6 +159,7 @@ const RealizarPedido = () => {
         </div>
       </ModalComponent>
     </div>
+    </DashboardPage>
   );
 };
 
