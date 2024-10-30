@@ -2,9 +2,11 @@ import React, { Dispatch, SetStateAction, useState } from 'react'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { motion } from 'framer-motion'
-import { ModalComponent } from '@/components/ui/modal/ModalComponent'
 import ClienteController from './ClienteController'
-import { CartItem, Producto } from '../page'
+import { CartItem } from '../page'
+import { toast } from 'react-toastify'
+import { useRouter } from 'next/navigation'
+import { useAuth } from '@/app/context/hooks/useAuth'
 
 interface SaleFormData {
     fecha_venta: string
@@ -48,14 +50,16 @@ interface IProps {
 
 export const PagoContent = ({ setModalPago, cartItems, total }: IProps) => {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
-
+  const {user} = useAuth()
+  const router = useRouter()
+  console.log(user)
     const handleSubmit = async (values: SaleFormData, { setSubmitting }: any) => {
             const {fecha_venta, tipo_venta, tipo_comprobante, forma_pago, numero_comprobante} = values
             const productTotal = cartItems.map(data => {
                 return {
                     cantidad: data.quantity,
-                    producto: data.producto.id,
-                    monto_total: 123123,
+                    producto_id: data.producto.id,
+                    monto_total: data.producto.precio * data.quantity,
                 }
             })
             try {
@@ -67,9 +71,9 @@ export const PagoContent = ({ setModalPago, cartItems, total }: IProps) => {
                 numero_comprobante,
                 cliente: selectedClient?.id,
                 items: productTotal,
+                user_name_venta: user?.username,
                 total_monto_venta: total,
               };
-          
               const response = await fetch('http://localhost:8000/venta/', {
                 method: 'POST',
                 headers: {
@@ -83,9 +87,11 @@ export const PagoContent = ({ setModalPago, cartItems, total }: IProps) => {
               }
           
               const result = await response.json();
-              console.log('Venta registrada exitosamente', result);
+              router.push(`/dashboard/productos/venta/${result.id}`)
+              toast.success('Venta registrada exitosamente')
             } catch (error) {
               console.error(error);
+              toast.warn('no se pudo registrar la venta')
             }
           
     }
@@ -103,6 +109,8 @@ export const PagoContent = ({ setModalPago, cartItems, total }: IProps) => {
                     x
                 </button>
             </div>
+            <ClienteController  setSelectedClient = {setSelectedClient} selectedClient={selectedClient}/>
+
             <Formik
                 initialValues={initialValues}
                 validationSchema={validationSchema}
@@ -181,7 +189,6 @@ export const PagoContent = ({ setModalPago, cartItems, total }: IProps) => {
                             </div>
                         </motion.div>
 
-                        <ClienteController  setSelectedClient = {setSelectedClient} selectedClient={selectedClient}/>
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}

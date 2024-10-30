@@ -5,15 +5,14 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaUser, FaLock } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { AuthContext } from "../context/AuthContext";
 import Image from "next/image";
+import { setToken, setUser } from "../context/utils/auth";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { setIsLoggedIn, setUserData } = useContext(AuthContext)!;
+  // const { setIsLoggedIn, setUserData } = useContext(AuthContext)!;
   const router = useRouter();
-
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -26,13 +25,16 @@ export default function Login() {
         body: JSON.stringify({ username, password }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("access_token", data.access);
-        localStorage.setItem("refresh_token", data.refresh);
+      // if (response.ok) {
+      //   const data = await response.json();
+      //   localStorage.setItem("access_token", data.access);
+      //   localStorage.setItem("refresh_token", data.refresh);
 
-        // Obtener información del usuario
-        const userId = data.user_id; // Asegúrate de que tu backend devuelva el ID del usuario
+      //   // Obtener información del usuario
+
+      if (response.ok) {
+        const data = await response.json()
+        const userId = data.user_id;
         const userResponse = await fetch(
           `http://127.0.0.1:8000/api/usuarios/${userId}/`,
           {
@@ -45,27 +47,37 @@ export default function Login() {
 
         if (userResponse.ok) {
           const userData = await userResponse.json();
-          localStorage.setItem("user_data", JSON.stringify(userData));
-          setIsLoggedIn(true);
-          setUserData(userData);
-          console.log("Información del usuario:", userData);
+          setToken(data.access)
+          setUser({
+            username: userData.username,
+            role: userData.role,
+            email: userData.email,
+            id: userData.id
+          })
+          router.push('/dashboard')
           toast.success("Inicio de sesión exitoso");
           router.push("/dashboard"); // Redirigir después de iniciar sesión
         } else {
           toast.error("No se pudo obtener información del usuario");
         }
+
       } else {
-        toast.error("Error en el inicio de sesión");
+        const errorData = await response.json()
+        toast.error("No se pudo obtener información del usuario");
       }
     } catch (error) {
-      console.error("Error:", error);
-      toast.error("Hubo un error en la solicitud");
+      console.error('Error durante el login', error)
+      toast.error("Error en el inicio de sesión");
     }
+    // } catch (error) {
+    //   console.error("Error:", error);
+    //   toast.error("Hubo un error en la solicitud");
+    // }
   };
 
   return (
     <div
-      className="flex items-center justify-center min-h-screen bg-[#ebc68e]"
+      className="flex items-center justify-center w-screen h-screen bg-[#ebc68e]"
       style={{
         backgroundImage: `url('/trigo-patron.png')`,
         backgroundRepeat: "repeat",

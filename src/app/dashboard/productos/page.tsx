@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import DashboardPage from "../page";
 interface Producto {
   id: number;
   nombre: string;
@@ -41,7 +42,8 @@ export default function Productos() {
   }, []);
 
   return (
-    <div className="p-8">
+ <DashboardPage>
+     <div className="bg-base-100 rounded ">
       <h1 className="text-2xl font-bold mb-6">Lista de productos</h1>
 
       <div className="flex flex-col sm:flex-row items-center mb-6 space-y-4 sm:space-y-0 sm:space-x-4">
@@ -105,5 +107,6 @@ export default function Productos() {
         ))}
       </div>
     </div>
+ </DashboardPage>
   );
 }

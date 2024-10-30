@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { CarTaxiFrontIcon, ShoppingCart, X } from 'lucide-react'
-import { Producto } from '@/app/productos/tabla/page';
+import { Producto } from '@/app/dashboard/productos/tabla/page';
 
 interface CartItem {
     producto: Producto,

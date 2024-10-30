@@ -5,7 +5,7 @@ import Footer from "./components/footer";
 import { ReactNode, useEffect } from "react";
 import { Bounce, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { AuthProvider } from "./context/AuthContext";
+import ProtectedLayout from "./context/ProtectedLayout";
 
 export default function RootLayout({
   children,
@@ -35,7 +35,7 @@ export default function RootLayout({
   }, []);
   return (
     <html lang="en">
-      <body className="flex flex-col min-h-screen">
+      <body className="flex h-screen w-screen">
         <ToastContainer
           position="top-right"
           autoClose={5000}
@@ -49,13 +49,9 @@ export default function RootLayout({
           theme="light"
           transition={Bounce}
         />
-        <AuthProvider>
-          <Header />
 
-          <main className="flex-grow">{children}</main>
+          <main className="">{children}</main>
 
-          <Footer />
-        </AuthProvider>
       </body>
     </html>
   );

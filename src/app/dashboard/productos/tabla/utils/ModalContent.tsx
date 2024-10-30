@@ -118,7 +118,10 @@ export const ModalContent = ({ setOpen, productos, onAddToCart }: iProps) => {
                 <div className="mb-4">
                   <p className="font-semibold mb-2">Producto: {selectedProduct.nombre}</p>
                   <p className="block text-sm font-medium text-gray-700 mb-1">
-                    Cantidad disponible: {selectedProduct.cantidad_disponible}
+                    Cantidad disponible {
+                      selectedProduct.unidad
+                    }: {selectedProduct.cantidad_disponible} 
+                   
                   </p>
                   <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
                     Cantidad:

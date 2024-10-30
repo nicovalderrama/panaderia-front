@@ -1,50 +1,56 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
+import { initialValuesProducto as initialValues } from "./utils/initialValues";
 import { validationSchemaProducto } from "./utils/validation.yup";
 import { FaSpinner, FaCheckCircle } from "react-icons/fa";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import ImageUpload from "../../../components/imageUploader";
-import { useParams } from "next/navigation";
+import DashboardPage from "../../page";
 
 interface ProductoValues {
-  id: string;
   nombre: string;
   descripcion: string;
   categoria: string;
   precio: number;
+  unidad: string;
   cantidad_disponible: number;
   imagen?: string;
 }
+const units = [
+  { value: 'kilo', label: 'Kilo' },
+  { value: 'unidad', label: 'Unidad' },
+  { value: 'docena', label: 'Docena' },
+  { value: 'pieza', label: 'Pieza' },
+]
 
-export default function EditarProducto() {
+export default function AgregarProducto() {
   const [image, setImage] = useState<File | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [producto, setProducto] = useState<ProductoValues | null>(null);
-  const { id: productId } = useParams();
-
-  useEffect(() => {
-    const fetchProduct = async () => {
-      const response = await fetch(
-        `http://localhost:8000/productos/${productId}/`
-      );
-      const data = await response.json();
-      setProducto(data);
-    };
-
-    fetchProduct();
-  }, [productId]);
 
   const handleSubmit = async (
     values: ProductoValues,
     { resetForm }: FormikHelpers<ProductoValues>
   ) => {
-    const formData = new FormData();
-    if (image) {
-      formData.append("imagen", image);
+    // Validación de imagen antes de proceder
+    if (!image) {
+      toast.error("Por favor, sube una imagen.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
     }
+
+    const formData = new FormData();
+    formData.append("imagen", image);
     formData.append("nombre", values.nombre);
     formData.append("descripcion", values.descripcion);
     formData.append("precio", values.precio.toString());
@@ -52,26 +58,24 @@ export default function EditarProducto() {
       "cantidad_disponible",
       values.cantidad_disponible.toString()
     );
+    formData.append("unidad", values.unidad);
     formData.append("categoria", values.categoria);
 
-    setIsSubmitting(true);
-    setIsSuccess(false);
+    setIsSubmitting(true); // Comenzar la solicitud
+    setIsSuccess(false); // Restablecer el estado de éxito
 
     try {
-      const response = await fetch(
-        `http://localhost:8000/productos/${values.id}/`,
-        {
-          method: "PUT",
-          body: formData,
-        }
-      );
+      const response = await fetch("http://localhost:8000/productos/", {
+        method: "POST",
+        body: formData,
+      });
 
       if (!response.ok) {
         throw new Error(`API request failed: ${response.statusText}`);
       }
 
       const data = await response.json();
-      toast.success("Producto editado con éxito", {
+      toast.success("Producto agregado con éxito", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -82,11 +86,11 @@ export default function EditarProducto() {
         theme: "light",
       });
 
-      setIsSuccess(true);
-      resetForm();
-      setImage(null);
+      setIsSuccess(true); // Cambiar a éxito
+      resetForm(); // Reiniciar el formulario
+      setImage(null); // Limpiar el estado de la imagen
     } catch (error) {
-      toast.error("Hubo un error al editar el producto. Inténtalo de nuevo.", {
+      toast.error("Hubo un error al agregar el producto. Inténtalo de nuevo.", {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -98,7 +102,7 @@ export default function EditarProducto() {
       });
       console.error("Error en la petición:", error);
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false); // Finalizar la solicitud
     }
   };
 
@@ -111,10 +115,9 @@ export default function EditarProducto() {
     }
   };
 
-  if (!producto) return <div>Cargando...</div>;
-
   return (
-    <main className="bg-[#ebc68e] flex justify-center items-center min-h-screen">
+   <DashboardPage>
+     <main className="bg-[#ebc68e] flex justify-center items-center min-h-screen">
       <div className="flex w-full ml-12 mr-12 shadow">
         <div className="flex w-[32rem] items-center justify-center bg-center bg-cover brightness-50 rounded-lg shadow bg-marron-oscuro">
           <Image
@@ -129,25 +132,19 @@ export default function EditarProducto() {
         <div className="flex w-full p-12 rounded-xl bg-amber-50">
           <div className="w-72">
             <h3 className="text-xl font-bold text-stone-500">
-              Editar Producto
+              Agregar un Producto
             </h3>
           </div>
 
           <Formik
-            initialValues={{
-              id: producto.id,
-              nombre: producto.nombre,
-              descripcion: producto.descripcion,
-              categoria: producto.categoria,
-              precio: producto.precio,
-              cantidad_disponible: producto.cantidad_disponible,
-            }}
+            initialValues={initialValues}
             validationSchema={validationSchemaProducto}
             onSubmit={handleSubmit}
           >
             {({ isSubmitting, resetForm }) => (
               <Form className="flex flex-col items-center justify-center w-full">
                 <fieldset className="flex flex-col pt-8 text-amber-900">
+                  {/* Nombre del producto */}
                   <div className="flex flex-col mt-2 mb-2">
                     <label className="font-bold text-amber-900">
                       Nombre del producto:
@@ -164,6 +161,7 @@ export default function EditarProducto() {
                     />
                   </div>
 
+                  {/* Descripción */}
                   <div className="flex flex-col mt-2 mb-2">
                     <label className="font-bold text-amber-900">
                       Descripción del producto:
@@ -180,6 +178,7 @@ export default function EditarProducto() {
                     />
                   </div>
 
+                  {/* Categoría */}
                   <div className="flex flex-col mt-2 mb-2">
                     <label className="font-bold text-amber-900">
                       Seleccione la categoría del producto:
@@ -201,7 +200,29 @@ export default function EditarProducto() {
                       className="text-red-500"
                     />
                   </div>
-
+                  <div className="flex flex-col mt-2 mb-2">
+                    <label className="font-bold text-amber-900">
+                      Seleccione la categoría del producto:
+                    </label>
+                  <Field
+                   as="select"
+                   className="w-full max-w-xs select select-ghost bg-amber-100 focus:outline-none"
+                   name="unidad"
+                  >
+                    <option value="" disabled>Seleccione una unidad</option>
+                    {units.map((unit) => (
+                      <option key={unit.value} value={unit.value}>
+                        {unit.label}
+                      </option>
+                    ))}
+                  </Field>
+                  <ErrorMessage
+                      name="unidad"
+                      component="div"
+                      className="text-red-500"
+                    />
+                  </div>
+                  {/* Precio */}
                   <div className="flex flex-col mt-2 mb-2">
                     <label className="font-bold text-amber-900">
                       Precio del producto:
@@ -219,8 +240,10 @@ export default function EditarProducto() {
                     />
                   </div>
 
+                  {/* Imagen */}
                   <ImageUpload onImageChange={setImage} />
 
+                  {/* Cantidad disponible */}
                   <div className="flex flex-col mt-2 mb-2">
                     <label className="font-bold text-amber-900">
                       Cantidad para la venta del producto:
@@ -239,6 +262,7 @@ export default function EditarProducto() {
                   </div>
                 </fieldset>
 
+                {/* Botones */}
                 <div className="flex justify-center mt-8 space-x-4">
                   <button
                     type="reset"
@@ -251,29 +275,34 @@ export default function EditarProducto() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className={`w-48 px-4 py-2 rounded transition-colors duration-300 ${
-                      isSubmitting
+                    className={`w-48 px-4 py-2 rounded transition-colors duration-300 ${isSubmitting
                         ? "bg-[#5c3826] text-white"
                         : isSuccess
-                        ? "bg-green-700 text-white"
-                        : "bg-[#ebc68e] text-[#5c3826] hover:bg-[#d6b765]"
-                    } flex items-center justify-center`}
+                          ? "bg-green-700 text-white"
+                          : "bg-[#ebc68e] text-[#5c3826]"
+                      } hover:bg-[#5c3826] hover:text-white flex items-center justify-center`}
                   >
                     {isSubmitting ? (
-                      <FaSpinner className="animate-spin" />
+                      <>
+                        <FaSpinner className="animate-spin mr-2" /> Agregando...
+                      </>
                     ) : isSuccess ? (
-                      <FaCheckCircle />
+                      <>
+                        <FaCheckCircle className="mr-2" /> Agregado con éxito
+                      </>
                     ) : (
-                      "Editar"
+                      "Agregar Producto"
                     )}
                   </button>
                 </div>
               </Form>
             )}
           </Formik>
-          <ToastContainer transition={Bounce} />
         </div>
       </div>
+
+      <ToastContainer />
     </main>
+   </DashboardPage>
   );
 }

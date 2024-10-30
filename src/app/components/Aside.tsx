@@ -2,7 +2,8 @@
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useRouter } from "next/navigation";
+import { useAuth } from "../context/hooks/useAuth";
 
 interface AsideProps {
   className?: string;
@@ -13,15 +14,15 @@ const Aside = ({ className }: AsideProps) => {
   const [isVentasOpen, setVentasOpen] = useState(false);
   const [isProveedoresOpen, setProveedoresOpen] = useState(false);
   const [isCuentaOpen, setCuentaOpen] = useState(false);
-  const { logout } = useAuth();
-
+  const {logout} = useAuth()
   const activeStyle = "bg-[#ebc68e] text-gray-700";
   const inactiveStyle = "hover:bg-[#ebc68e] hover:text-gray-700";
+  const router = useRouter()
 
   return (
     <aside className={`h-full bg-[#735945] text-white ${className}`}>
       <div className="flex flex-col justify-between h-full border-e">
-        <div className="flex-grow px-4 py-6">
+        <div className=" px-4 py-6 h-full">
           <span className="grid w-32 h-10 mx-auto text-xs place-content-center">
             <img src="/logo-marron-elmana-sinfondo.png" alt="" />
           </span>
@@ -73,7 +74,8 @@ const Aside = ({ className }: AsideProps) => {
                     >
                       <li>
                         <Link
-                          href="/productos/gestionar"
+                          href="/dashboard/productos/gestionar"
+                          replace
                           className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
                         >
                           Gestionar productos
@@ -81,7 +83,8 @@ const Aside = ({ className }: AsideProps) => {
                       </li>
                       <li>
                         <Link
-                          href="/productos/agregar"
+                          href="/dashboard/productos/agregar"
+                          replace
                           className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
                         >
                           Agregar producto
@@ -130,7 +133,8 @@ const Aside = ({ className }: AsideProps) => {
                     >
                       <li>
                         <Link
-                          href="/productos/tabla"
+                          href={'/dashboard/productos/tabla'}
+                          replace
                           className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
                         >
                           Registrar venta
@@ -245,7 +249,7 @@ const Aside = ({ className }: AsideProps) => {
                     >
                       <li>
                         <button
-                          onClick={logout}
+                          onClick={()=>logout()}
                           className="w-full text-left px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
                         >
                           Cerrar sesión

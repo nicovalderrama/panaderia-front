@@ -14,11 +14,19 @@ interface TableProps {
 }
 
 export const TableComponent = ({ headers, data, actions }: TableProps) => {
-
+    // const actions = [
+    //     {
+    //         label: 'add_box',
+    //         onClick: (item: Producto) => {
+    //             setOpen(true)
+    //             setRow(item)
+    //         },
+    //     }
+    // ]
 
   return (
-    <div className="overflow-x-auto shadow-md sm:rounded-lg">
-      <table className="w-full text-sm text-left text-gray-500">
+    <div className="overflow-x-auto shadow-md sm:rounded-lg ">
+      <table className="w-full text-sm text-left text-gray-500 ">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
             {headers.map((header, index) => (

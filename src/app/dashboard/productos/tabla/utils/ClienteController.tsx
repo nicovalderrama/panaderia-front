@@ -1,8 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
-import { Producto } from '../page'
+import { RegisterClient } from './RegisterClient'
 
 interface Client {
   id: number
@@ -50,12 +48,9 @@ const ClienteController = ({setSelectedClient, selectedClient}: IProps) => {
             .then((data) => setClient(data))
             .catch((error) => console.error(error));
   },[selectedClient])
-  const validationSchema = Yup.object({
-    nombre_completo: Yup.string().required('Nombre completo es requerido'),
-    telefono: Yup.string().required('Teléfono es requerido'),
-    direccion: Yup.string().required('Dirección es requerida'),
-    tipo_cliente: Yup.string().oneOf(['Minorista', 'Mayorista'], 'Tipo de cliente inválido').required('Tipo de cliente es requerido'),
-  })
+
+
+
  
   return (
     <div className="flex flex-col m-4">
@@ -116,57 +111,7 @@ const ClienteController = ({setSelectedClient, selectedClient}: IProps) => {
               )}
 
               {showNewClientForm && (
-                <Formik
-                  initialValues={{
-                    nombre_completo: '',
-                    telefono: '',
-                    direccion: '',
-                    tipo_cliente: 'Minorista' as 'Minorista' | 'Mayorista',
-                  }}
-                  validationSchema={validationSchema}
-                  onSubmit={() =>{}}
-                >
-                  {({ isSubmitting }) => (
-                    <Form className='w-full m-4'>
-                      <div className="mb-4">
-                        <label htmlFor="nombre_completo" className="block text-sm font-medium text-gray-700">Nombre Completo</label>
-                        <Field name="nombre_completo" type="text" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
-                        <ErrorMessage name="nombre_completo" component="div" className="text-red-500 text-sm mt-1" />
-                      </div>
-
-                      <div className="mb-4">
-                        <label htmlFor="telefono" className="block text-sm font-medium text-gray-700">Teléfono</label>
-                        <Field name="telefono" type="text" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
-                        <ErrorMessage name="telefono" component="div" className="text-red-500 text-sm mt-1" />
-                      </div>
-
-                      <div className="mb-4">
-                        <label htmlFor="direccion" className="block text-sm font-medium text-gray-700">Dirección</label>
-                        <Field name="direccion" type="text" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" />
-                        <ErrorMessage name="direccion" component="div" className="text-red-500 text-sm mt-1" />
-                      </div>
-
-                      <div className="mb-4">
-                        <label htmlFor="tipo_cliente" className="block text-sm font-medium text-gray-700">Tipo de Cliente</label>
-                        <Field name="tipo_cliente" as="select" className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
-                          <option value="Minorista">Minorista</option>
-                          <option value="Mayorista">Mayorista</option>
-                        </Field>
-                        <ErrorMessage name="tipo_cliente" component="div" className="text-red-500 text-sm mt-1" />
-                      </div>
-
-                      <motion.button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 transition-colors duration-300"
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        {isSubmitting ? 'Enviando...' : 'Registrar Cliente'}
-                      </motion.button>
-                    </Form>
-                  )}
-                </Formik>
+                <RegisterClient setSelectedClient = {setSelectedClient} setShowNewClientForm={setShowNewClientForm} />
               )}
             </div>
           </motion.div>

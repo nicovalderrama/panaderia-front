@@ -1,15 +1,15 @@
+'use client'
+
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useAuth } from "../context/AuthContext";
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const { isLoggedIn, userData, logout } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,7 +21,7 @@ export default function Header() {
   }, []);
 
   const handleLogout = () => {
-    logout();
+    // logout();
     toast.success("Sesión cerrada exitosamente");
   };
 
@@ -41,7 +41,7 @@ export default function Header() {
     >
       <nav className="flex items-center justify-between px-1 py-1 pl-4 pr-4">
         <div className="flex-1">
-          {!isLoggedIn ? 
+          {false ? 
           <ul className="flex justify-start">
           <li className="pr-3">
             <Link href="/productos" className="hover:underline">
@@ -73,10 +73,10 @@ export default function Header() {
         </div>
         <div className="flex-1">
           <ul className="flex justify-end">
-            {isLoggedIn ? (
+            {false ? (
               <li className="pr-3">
                 <span className="mr-2">
-                  {userData?.username} ({userData?.role})
+                  {/* {userData?.username} ({userData?.role}) */}
                 </span>
                 <button
                   onClick={handleLogout}

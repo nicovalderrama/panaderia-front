@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Plus, ShoppingCart } from "lucide-react";
 import ProductCard from "./utils/ProductCart";
 import { PagoContent } from "./utils/pagoContent";
+import DashboardPage from "../../page";
 
 export interface Producto {
     id: number;
@@ -16,6 +17,7 @@ export interface Producto {
     descripcion: string;
     precio: number;
     cantidad_disponible: number;
+    unidad: string
     categoria: string;
     imagen: string;
 }
@@ -31,25 +33,7 @@ export default function Page() {
     const [cartItems, setCartItems] = useState<CartItem[]>([])
     const [total, setTotal] = useState<number>(0);
     const [modalPago, setModalPago] = useState<boolean>(false);
-    // const [row, setRow] = useState<Producto>({
-    //     id: 0,
-    //     nombre: '',
-    //     descripcion: '',
-    //     precio: 0,
-    //     cantidad_disponible: 0,
-    //     categoria: '',
-    //     imagen: '',
-    // });
 
-    // const actions = [
-    //     {
-    //         label: 'add_box',
-    //         onClick: (item: Producto) => {
-    //             setOpen(true)
-    //             setRow(item)
-    //         },
-    //     }
-    // ]
     useEffect(() => {
         fetch(apiUrl + "/productos/")
             .then((response) => response.json())
@@ -82,7 +66,8 @@ export default function Page() {
 
 
     return (
-        <div className="container mx-auto p-4">
+       <DashboardPage>
+         <div className="container mx-auto p-4">
             <ModalComponent isOpen={open} onClose={() => console.log()}>
                 <ModalContent setOpen={setOpen} onAddToCart={handleAddToCart} productos={productos} />
             </ModalComponent>
@@ -90,7 +75,6 @@ export default function Page() {
                 <PagoContent setModalPago={setModalPago} cartItems={cartItems} total={ total}/>
             </ModalComponent>
             <div>
-                {/* <Cart itemsCart = {cartItems}/> */}
             </div>
             <div>
                 <div className="flex justify-between mb-4">
@@ -124,11 +108,6 @@ export default function Page() {
                         <h2 className="text-2xl font-bold text-gray-700 mb-4">Total: ${total}</h2>
                     </div>
                 </div>
-                {/* {
-                    productos.length ?
-                        <TableComponent headers={productos.length ? Object.keys(productos[0]).filter(key => key !== 'imagen') : []} data={productos.length ? productos : []} actions={actions} />
-                        : 'loading'
-                } */}
                 <AnimatePresence mode="wait">
                     {!cartItems.length ? (
                         <motion.div
@@ -137,9 +116,9 @@ export default function Page() {
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -50 }}
                             transition={{ duration: 0.5 }}
-                            className="flex flex-col items-center justify-center p-8 bg-white rounded-lg shadow-md"
+                            className="flex flex-col items-center justify-center p-8  rounded-lg "
                         >
-                            <ShoppingCart size={64} className="text-gray-400 mb-4" />
+                            <ShoppingCart size={64} className="text-gray-800 mb-4" />
                             <h2 className="text-2xl font-bold text-gray-700 mb-4">Tu carrito está vacío</h2>
 
                         </motion.div>
@@ -151,5 +130,6 @@ export default function Page() {
                 </AnimatePresence>
             </div>
         </div>
+       </DashboardPage>
     )
 }

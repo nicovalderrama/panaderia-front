@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { TableProducts } from "../../../components/ui/table/TableProducts";
-import { ModalComponent } from "../../../components/ui/modal/ModalComponent";
+import { TableProducts } from "../../../../components/ui/table/TableProducts";
+import { ModalComponent } from "../../../../components/ui/modal/ModalComponent";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
+import DashboardPage from "../../page";
 
 interface Producto {
   id: number;
@@ -73,7 +74,8 @@ const GestionProductos = () => {
   };
 
   return (
-    <div className="p-6 bg-[#3f2f25ee] text-white min-h-screen flex flex-col">
+ <DashboardPage>
+     <div className="p-6  text-white min-h-screen flex flex-col">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold">Gestión de Productos</h1>
         <button
@@ -127,6 +129,7 @@ const GestionProductos = () => {
         </div>
       </ModalComponent>
     </div>
+ </DashboardPage>
   );
 };
 
