@@ -70,7 +70,7 @@ const GestionProductos = () => {
   };
 
   const handleAgregarProducto = () => {
-    router.push("/productos/agregar/");
+    router.push("/dashboard/productos/agregar/");
   };
 
   return (

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
+import DashboardPage from "../page";
 
 // Validación con Yup
 const InsumoSchema = Yup.object().shape({
@@ -33,7 +34,8 @@ const CrearInsumo = () => {
   }, []);
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
+  <DashboardPage>
+      <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">
         Crear Nuevo Insumo
       </h2>
@@ -200,6 +202,7 @@ const CrearInsumo = () => {
         )}
       </Formik>
     </div>
+  </DashboardPage>
   );
 };
 

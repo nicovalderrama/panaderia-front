@@ -136,6 +136,7 @@ const CrearPedido: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
+        className="shadow-none p-4"
       >
         <form onSubmit={formik.handleSubmit} className="p-4 border rounded">
           <h2 className="text-lg font-bold mb-4">Crear Pedido</h2>

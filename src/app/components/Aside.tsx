@@ -14,7 +14,7 @@ const Aside = ({ className }: AsideProps) => {
   const [isVentasOpen, setVentasOpen] = useState(false);
   const [isProveedoresOpen, setProveedoresOpen] = useState(false);
   const [isCuentaOpen, setCuentaOpen] = useState(false);
-  const {logout} = useAuth()
+  const { logout } = useAuth()
   const activeStyle = "bg-[#ebc68e] text-gray-700";
   const inactiveStyle = "hover:bg-[#ebc68e] hover:text-gray-700";
   const router = useRouter()
@@ -41,16 +41,14 @@ const Aside = ({ className }: AsideProps) => {
               <div>
                 <button
                   onClick={() => setProductosOpen(!isProductosOpen)}
-                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${
-                    isProductosOpen ? activeStyle : inactiveStyle
-                  }`}
+                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${isProductosOpen ? activeStyle : inactiveStyle
+                    }`}
                 >
                   <span>Productos</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className={`transition duration-300 ${
-                      isProductosOpen ? "rotate-180" : ""
-                    }`}
+                    className={`transition duration-300 ${isProductosOpen ? "rotate-180" : ""
+                      }`}
                     viewBox="0 0 20 20"
                     fill="currentColor"
                     width="20"
@@ -100,16 +98,14 @@ const Aside = ({ className }: AsideProps) => {
               <div>
                 <button
                   onClick={() => setVentasOpen(!isVentasOpen)}
-                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${
-                    isVentasOpen ? activeStyle : inactiveStyle
-                  }`}
+                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${isVentasOpen ? activeStyle : inactiveStyle
+                    }`}
                 >
                   <span>Ventas</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className={`transition duration-300 ${
-                      isVentasOpen ? "rotate-180" : ""
-                    }`}
+                    className={`transition duration-300 ${isVentasOpen ? "rotate-180" : ""
+                      }`}
                     viewBox="0 0 20 20"
                     fill="currentColor"
                     width="20"
@@ -150,16 +146,14 @@ const Aside = ({ className }: AsideProps) => {
               <div>
                 <button
                   onClick={() => setProveedoresOpen(!isProveedoresOpen)}
-                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${
-                    isProveedoresOpen ? activeStyle : inactiveStyle
-                  }`}
+                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${isProveedoresOpen ? activeStyle : inactiveStyle
+                    }`}
                 >
                   <span>Proveedores</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className={`transition duration-300 ${
-                      isProveedoresOpen ? "rotate-180" : ""
-                    }`}
+                    className={`transition duration-300 ${isProveedoresOpen ? "rotate-180" : ""
+                      }`}
                     viewBox="0 0 20 20"
                     fill="currentColor"
                     width="20"
@@ -183,7 +177,17 @@ const Aside = ({ className }: AsideProps) => {
                     >
                       <li>
                         <Link
-                          href="/dashboard/pedidos/realizar"
+                          href="/dashboard/proveedores"
+                          replace
+                          className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                        >
+                          Registrar Proveedor
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          href={"/dashboard/pedidos/realizar"}
+                          replace
                           className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
                         >
                           Realizar pedido
@@ -191,7 +195,8 @@ const Aside = ({ className }: AsideProps) => {
                       </li>
                       <li>
                         <Link
-                          href="/registrar_recepcion"
+                          href="/dashboard/pedidos/recepcion"
+                          replace
                           className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
                         >
                           Registrar recepción
@@ -206,6 +211,7 @@ const Aside = ({ className }: AsideProps) => {
             <li>
               <Link
                 href="/dashboard/inventario"
+                replace
                 className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
               >
                 Inventario
@@ -216,16 +222,14 @@ const Aside = ({ className }: AsideProps) => {
               <div>
                 <button
                   onClick={() => setCuentaOpen(!isCuentaOpen)}
-                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${
-                    isCuentaOpen ? activeStyle : inactiveStyle
-                  }`}
+                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${isCuentaOpen ? activeStyle : inactiveStyle
+                    }`}
                 >
                   <span>Cuenta</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className={`transition duration-300 ${
-                      isCuentaOpen ? "rotate-180" : ""
-                    }`}
+                    className={`transition duration-300 ${isCuentaOpen ? "rotate-180" : ""
+                      }`}
                     viewBox="0 0 20 20"
                     fill="currentColor"
                     width="20"
@@ -249,7 +253,7 @@ const Aside = ({ className }: AsideProps) => {
                     >
                       <li>
                         <button
-                          onClick={()=>logout()}
+                          onClick={() => logout()}
                           className="w-full text-left px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
                         >
                           Cerrar sesión
