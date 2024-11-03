@@ -61,43 +61,38 @@ const CrearPedido: React.FC = () => {
       observaciones: Yup.string(),
     }),
     onSubmit: async (values) => {
+      const itemsData = selectedInsumos
+      .map((insumo) => ({
+        insumo_id: insumo.id,
+        cantidad: insumo.cantidad,
+      }))
+      .filter((insumo) => +insumo.cantidad > 0); // Filtra los que tienen cantidad mayor a 0
+
       try {
-        // 1. Crear el pedido sin los items
         const pedidoData = {
           observaciones: values.observaciones,
           proveedor: values.proveedorId,
           usuario: parsedUserData?.id,
+          items: itemsData,
         };
-
-        const response = await axios.post(
-          "http://localhost:8000/pedido/",
-          pedidoData
-        );
-
-        const pedidoId = response.data.id; // Obtén el ID del pedido creado
-
-        // 2. Ahora, crear un array de items con el pedido_id
-        const itemsData = selectedInsumos
-          .map((insumo) => ({
-            insumo_id: insumo.id,
-            cantidad: parseFloat(insumo.cantidad),
-            pedido_id: pedidoId, // Incluye el ID del pedido aquí
-          }))
-          .filter((insumo) => insumo.cantidad > 0); // Filtra los que tienen cantidad mayor a 0
-
-        // 3. Envía los items
-        await Promise.all(
-          itemsData.map((itemData) =>
-            axios.post("http://localhost:8000/item-pedido/", itemData)
-          )
-        );
-
+        const response = await fetch('http://localhost:8000/pedido/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(pedidoData),
+        });
+        if (!response.ok) {
+          throw new Error('Error al registrar la venta');
+        }
+    
+        const result = await response.json();
         toast.success("Pedido creado con éxito");
         formik.resetForm();
         setSelectedInsumos([]);
         setFilteredInsumos([]);
         setNoInsumosMessage(null);
-        router.push(`/dashboard/pedidos/realizar/${pedidoId}`);
+        router.push(`/dashboard/pedidos/realizar/${result.id}`);
       } catch (error) {
         console.error("Error al crear el pedido", error);
         toast.error("Error al crear el pedido");

@@ -3,15 +3,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import DashboardPage from "../page";
-interface Producto {
-  id: number;
-  nombre: string;
-  descripcion: string;
-  precio: number;
-  cantidad_disponible: number;
-  categoria: string;
-  imagen: string;
-}
+import { Producto } from "./tabla/page";
+
 
 export default function Productos() {
   // Cambia la función a Productos
@@ -20,13 +13,12 @@ export default function Productos() {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [busqueda, setBusqueda] = useState<string>("");
   const [categoriaFiltro, setCategoriaFiltro] = useState<string>("todos");
-  const [precioFiltro, setPrecioFiltro] = useState<number>(0);
+  // const [precioFiltro, setPrecioFiltro] = useState<number>(0);
 
   const productosFiltrados = productos.filter((producto) => {
     return (
       producto.nombre.toLowerCase().includes(busqueda.toLowerCase()) &&
-      (categoriaFiltro === "todos" || producto.categoria === categoriaFiltro) &&
-      producto.precio >= precioFiltro
+      (categoriaFiltro === "todos" || producto.categoria === categoriaFiltro)
     );
   });
 
@@ -64,14 +56,14 @@ export default function Productos() {
           <option value="pasteleria">Pastelería</option>
         </select>
 
-        <input
+        {/* <input
           type="number"
           placeholder="Filtrar por precio"
           className="border p-2 rounded-md"
           value={precioFiltro === 0 ? "" : precioFiltro}
           min="0"
           onChange={(e) => setPrecioFiltro(Number(e.target.value))}
-        />
+        /> */}
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -87,7 +79,7 @@ export default function Productos() {
             />
             <h2 className="text-lg font-bold mb-2">{producto.nombre}</h2>
             <p className="text-gray-700">{producto.descripcion}</p>
-            <p className="text-gray-500">Precio: ${producto.precio}</p>
+            <p className="text-gray-500">Precio: ${producto.precio_lista}</p>
             <motion.button
               className="px-12 py-3 mt-10 text-sm text-center font-bold text-[#ebc68e] border bg-[#8b563b] border-[#ebc68e] rounded focus:outline-none bg-opacity-95"
               whileHover={{

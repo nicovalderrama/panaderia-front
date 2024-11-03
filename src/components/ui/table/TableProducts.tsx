@@ -37,7 +37,8 @@ export const TableProducts = ({ headers, data, actions }: TableProps) => {
             <tr key={rowIndex} className="bg-white border-b hover:bg-gray-50">
               <td className="px-6 py-4">{row.id}</td>
               <td className="px-6 py-4">{row.nombre}</td>
-              <td className="px-6 py-4">{row.precio}</td>
+              <td className="px-6 py-4">{row.precio_lista}</td>
+              <td className="px-6 py-4">{row.precio_mayorista}</td>
               <td className="px-6 py-4">{row.cantidad_disponible}</td>
 
               {actions && (

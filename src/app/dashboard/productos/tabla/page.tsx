@@ -15,7 +15,8 @@ export interface Producto {
     id: number;
     nombre: string;
     descripcion: string;
-    precio: number;
+    precio_lista: number;
+    precio_mayorista: number;
     cantidad_disponible: number;
     unidad: string
     categoria: string;
@@ -61,7 +62,13 @@ export default function Page() {
 
     }
     const removeItem = (id: number) => setCartItems(cartItems.filter(item => item.producto.id !== id))
-    const getTotal = () => setTotal(cartItems.reduce((total, item) => total + item.producto.precio * item.quantity, 0))
+    const getTotal = () => setTotal(cartItems.reduce((total, item) => {
+        if(item.quantity >3){
+            return total + item.producto.precio_mayorista * item.quantity
+        }else{
+            return total + item.producto.precio_lista * item.quantity
+        }
+    }, 0))
 
 
 

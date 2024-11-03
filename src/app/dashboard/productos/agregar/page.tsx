@@ -13,7 +13,8 @@ interface ProductoValues {
   nombre: string;
   descripcion: string;
   categoria: string;
-  precio: number;
+  precio_lista: number;
+  precio_mayorista: number;
   unidad: string;
   cantidad_disponible: number;
   imagen?: string;
@@ -21,8 +22,6 @@ interface ProductoValues {
 const units = [
   { value: 'kilo', label: 'Kilo' },
   { value: 'unidad', label: 'Unidad' },
-  { value: 'docena', label: 'Docena' },
-  { value: 'pieza', label: 'Pieza' },
 ]
 
 export default function AgregarProducto() {
@@ -53,7 +52,9 @@ export default function AgregarProducto() {
     formData.append("imagen", image);
     formData.append("nombre", values.nombre);
     formData.append("descripcion", values.descripcion);
-    formData.append("precio", values.precio.toString());
+    formData.append("precio_lista", values.precio_lista.toString());
+    formData.append("precio_mayorista", values.precio_mayorista.toString());
+
     formData.append(
       "cantidad_disponible",
       values.cantidad_disponible.toString()
@@ -225,20 +226,37 @@ export default function AgregarProducto() {
                   {/* Precio */}
                   <div className="flex flex-col mt-2 mb-2">
                     <label className="font-bold text-amber-900">
-                      Precio del producto:
+                      Precio de lista del producto:
                     </label>
                     <Field
                       className="w-full max-w-xs input input-bordered bg-amber-100 focus:outline-none"
                       type="number"
-                      name="precio"
+                      name="precio_lista"
                       min="1"
                     />
                     <ErrorMessage
-                      name="precio"
+                      name="precio_lista"
                       component="div"
                       className="text-red-500"
                     />
                   </div>
+                  <div className="flex flex-col mt-2 mb-2">
+                    <label className="font-bold text-amber-900">
+                      Precio mayorista del producto:
+                    </label>
+                    <Field
+                      className="w-full max-w-xs input input-bordered bg-amber-100 focus:outline-none"
+                      type="number"
+                      name="precio_mayorista"
+                      min="1"
+                    />
+                    <ErrorMessage
+                      name="precio_mayorista"
+                      component="div"
+                      className="text-red-500"
+                    />
+                  </div>
+
 
                   {/* Imagen */}
                   <ImageUpload onImageChange={setImage} />

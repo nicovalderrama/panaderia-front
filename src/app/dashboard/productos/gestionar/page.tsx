@@ -12,7 +12,8 @@ import DashboardPage from "../../page";
 interface Producto {
   id: number;
   nombre: string;
-  precio: string;
+  precio_lista: string;
+  precio_mayorista: string;
   cantidad_disponible: number;
 }
 
@@ -61,7 +62,7 @@ const GestionProductos = () => {
   };
 
   const handleEditar = (producto: any) => {
-    router.push(`/productos/editar/${producto.id}`); // Redirige a la página de edición
+    router.push(`/dashboard/productos/editar/${producto.id}`); // Redirige a la página de edición
   };
 
   const handleEliminarClick = (producto: Producto) => {
@@ -87,7 +88,7 @@ const GestionProductos = () => {
       </div>
 
       <TableProducts
-        headers={["ID", "Nombre", "Precio", "Cantidad Disponible"]}
+        headers={["ID", "Nombre", "Precio lista", "Precio mayorista", "Cantidad Disponible"]}
         data={productos}
         actions={[
           {

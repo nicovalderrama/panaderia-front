@@ -13,7 +13,13 @@ const Dashboard = () => {
           <h2 className="text-lg font-semibold">Gestionar Productos</h2>
           <p className="text-sm">Administra todos tus productos aquí.</p>
         </Link>
-
+        <Link
+          href="/dashboard/reportes"
+          className="block p-4 bg-marron-principal rounded-lg shadow-md hover:bg-[#d9b074] transition duration-300"
+        >
+          <h2 className="text-lg font-semibold">Reportes</h2>
+          {/* <p className="text-sm">Verifica el estado de tu inventario.</p> */}
+        </Link>
         <Link
           href="/inventario"
           className="block p-4 bg-marron-principal rounded-lg shadow-md hover:bg-[#d9b074] transition duration-300"

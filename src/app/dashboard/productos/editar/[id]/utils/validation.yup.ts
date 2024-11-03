@@ -4,7 +4,11 @@ export const validationSchemaProducto = Yup.object().shape({
   nombre: Yup.string().required("El nombre es obligatorio"),
   descripcion: Yup.string().required("La descripción es obligatoria"),
   categoria: Yup.string().required("Seleccione una categoría"),
-  precio: Yup.number()
+  unidad: Yup.string().required("Seleccione una unidad"),
+  precio_lista: Yup.number()
+    .required("El precio es obligatorio")
+    .positive("El precio debe ser mayor a 0"),
+  precio_mayorista: Yup.number()
     .required("El precio es obligatorio")
     .positive("El precio debe ser mayor a 0"),
   cantidad_disponible: Yup.number()

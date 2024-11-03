@@ -38,15 +38,15 @@ export const TableComponent = ({ headers, data, actions }: TableProps) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((row, rowIndex) => (
+          {data?.map((row, rowIndex) => (
             <tr key={rowIndex} className="bg-white border-b hover:bg-gray-50">
-              {Object.keys(row).map((cell: any, cellIndex: any) => (
+              {row && (Object.keys(row).map((cell: any, cellIndex: any) => (
                 cell !== 'imagen' ?
                   <td key={cellIndex} className="px-6 py-4">
                     {row[cell]}
                   </td> : ''
 
-              ))}
+              )))}
               {actions && (
                 <td className="px-6 py-4">
                   <div className="flex space-x-2">

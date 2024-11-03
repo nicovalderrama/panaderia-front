@@ -52,14 +52,15 @@ export const PagoContent = ({ setModalPago, cartItems, total }: IProps) => {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null)
   const {user} = useAuth()
   const router = useRouter()
-  console.log(user)
     const handleSubmit = async (values: SaleFormData, { setSubmitting }: any) => {
             const {fecha_venta, tipo_venta, tipo_comprobante, forma_pago, numero_comprobante} = values
             const productTotal = cartItems.map(data => {
                 return {
                     cantidad: data.quantity,
                     producto_id: data.producto.id,
-                    monto_total: data.producto.precio * data.quantity,
+                    producto_precio_unidad: data.quantity > 3 ? data.producto.precio_mayorista: data.producto.precio_lista,
+                    tipo_precio: data.quantity > 3 ? 'mayorista' : 'lista',
+                    monto_total: (data.quantity > 3 ? data.producto.precio_mayorista: data.producto.precio_lista) * data.quantity,
                 }
             })
             try {
