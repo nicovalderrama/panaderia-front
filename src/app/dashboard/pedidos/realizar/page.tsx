@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { FaPlus } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 import DashboardPage from "../../page";
 
 interface Insumo {
@@ -21,6 +22,7 @@ interface SelectedInsumo {
 }
 
 const CrearPedido: React.FC = () => {
+  const router = useRouter();
   const [insumos, setInsumos] = useState<Insumo[]>([]);
   const [proveedores, setProveedores] = useState<any[]>([]);
   const [selectedInsumos, setSelectedInsumos] = useState<SelectedInsumo[]>([]);
@@ -60,6 +62,7 @@ const CrearPedido: React.FC = () => {
     }),
     onSubmit: async (values) => {
       try {
+        // 1. Crear el pedido sin los items
         const pedidoData = {
           observaciones: values.observaciones,
           proveedor: values.proveedorId,
@@ -70,19 +73,23 @@ const CrearPedido: React.FC = () => {
           "http://localhost:8000/pedido/",
           pedidoData
         );
-        const pedidoId = response.data.id;
 
+        const pedidoId = response.data.id; // Obtén el ID del pedido creado
+
+        // 2. Ahora, crear un array de items con el pedido_id
+        const itemsData = selectedInsumos
+          .map((insumo) => ({
+            insumo_id: insumo.id,
+            cantidad: parseFloat(insumo.cantidad),
+            pedido_id: pedidoId, // Incluye el ID del pedido aquí
+          }))
+          .filter((insumo) => insumo.cantidad > 0); // Filtra los que tienen cantidad mayor a 0
+
+        // 3. Envía los items
         await Promise.all(
-          selectedInsumos.map(async (insumo) => {
-            if (insumo.cantidad && parseFloat(insumo.cantidad) > 0) {
-              const itemData = {
-                insumo: insumo.id,
-                cantidad: parseFloat(insumo.cantidad),
-                pedido: pedidoId,
-              };
-              await axios.post("http://localhost:8000/item-pedido/", itemData);
-            }
-          })
+          itemsData.map((itemData) =>
+            axios.post("http://localhost:8000/item-pedido/", itemData)
+          )
         );
 
         toast.success("Pedido creado con éxito");
@@ -90,6 +97,7 @@ const CrearPedido: React.FC = () => {
         setSelectedInsumos([]);
         setFilteredInsumos([]);
         setNoInsumosMessage(null);
+        router.push(`/dashboard/pedidos/realizar/${pedidoId}`);
       } catch (error) {
         console.error("Error al crear el pedido", error);
         toast.error("Error al crear el pedido");
@@ -146,10 +154,11 @@ const CrearPedido: React.FC = () => {
             <select
               {...formik.getFieldProps("proveedorId")}
               onChange={handleProveedorChange}
-              className={`mt-1 block w-full border ${formik.touched.proveedorId && formik.errors.proveedorId
+              className={`mt-1 block w-full border ${
+                formik.touched.proveedorId && formik.errors.proveedorId
                   ? "border-red-500"
                   : "border-gray-300"
-                } rounded-md p-2`}
+              } rounded-md p-2`}
             >
               <option value="">Seleccionar proveedor</option>
               {proveedores.map((proveedor) => (
