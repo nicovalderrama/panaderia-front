@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { FaCheck } from "react-icons/fa";
 import DashboardPage from "../../page";
+import Image from "next/image";
 
 interface Pedido {
   id: number;
@@ -118,15 +119,27 @@ const RecepcionPedido: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
+        className="flex flex-col items-center justify-center min-h-screen bg-marron-oscuro"
       >
-        <form onSubmit={formik.handleSubmit} className="p-4 border rounded">
+        <div className="flex justify-center mb-4">
+          <Image
+            src="/logo-marron-elmana-sinfondo.png"
+            alt="Logo"
+            width={200}
+            height={200}
+          />
+        </div>
+        <form
+          onSubmit={formik.handleSubmit}
+          className="p-4 border rounded-lg bg-marron-oscuro shadow-md text-trigo w-[80%]"
+        >
           <h2 className="text-lg font-bold mb-4">Recepción de Pedido</h2>
 
           <div className="mb-4">
             <label className="block">Pedido:</label>
             <select
               {...formik.getFieldProps("pedidoId")}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              className="mt-1 bg-marron-principal block w-full border border-gray-300 rounded-md p-2"
             >
               <option value="">Seleccionar pedido</option>
               {pedidos.map((pedido) => (
@@ -139,10 +152,10 @@ const RecepcionPedido: React.FC = () => {
 
           {formik.values.pedidoId && (
             <div className="mb-4">
-              <label className="block">Empleado que recibe:</label>
+              <label className="block ">Empleado que recibe:</label>
               <select
                 {...formik.getFieldProps("recibidoPorId")}
-                className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                className="mt-1 bg-marron-principal block w-full border border-gray-300 rounded-md p-2"
               >
                 <option value="">Seleccionar empleado</option>
                 {empleados.map((empleado) => (
@@ -158,13 +171,13 @@ const RecepcionPedido: React.FC = () => {
             <label className="block">Observaciones:</label>
             <textarea
               {...formik.getFieldProps("observaciones")}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              className="mt-1 bg-marron-principal block w-full border border-gray-300 rounded-md p-2"
             />
           </div>
 
           <button
             type="submit"
-            className="flex items-center bg-green-500 text-white p-2 rounded"
+            className="flex items-center bg-green-900 hover:bg-green-600 text-white p-2 rounded"
           >
             <FaCheck className="mr-2" /> Registrar Recepción
           </button>

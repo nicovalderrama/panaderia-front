@@ -18,7 +18,7 @@ export const TableProducts = ({ headers, data, actions }: TableProps) => {
   return (
     <div className="overflow-x-auto shadow-md sm:rounded-lg">
       <table className="w-full text-sm text-left text-gray-500">
-        <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+        <thead className="text-xs text-[#f3c176] uppercase bg-marron-principal">
           <tr>
             {headers.map((header, index) => (
               <th key={index} scope="col" className="px-6 py-3">
@@ -34,7 +34,7 @@ export const TableProducts = ({ headers, data, actions }: TableProps) => {
         </thead>
         <tbody>
           {data.map((row, rowIndex) => (
-            <tr key={rowIndex} className="bg-white border-b hover:bg-gray-50">
+            <tr key={rowIndex} className="bg-white border-b hover:bg-gray-200">
               <td className="px-6 py-4">{row.id}</td>
               <td className="px-6 py-4">{row.nombre}</td>
               <td className="px-6 py-4">{row.precio_lista}</td>
