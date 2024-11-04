@@ -32,7 +32,6 @@ const GestionProductos = () => {
       const response = await fetch("http://localhost:8000/productos/");
       const data = await response.json();
       setProductos(data);
-      console.log("data", data);
     } catch (error) {
       toast.error("Error al obtener los productos");
     }
