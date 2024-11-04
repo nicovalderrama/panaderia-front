@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import jsPDF from "jspdf";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import DashboardPage from "@/app/dashboard/page";
+import { useAuth } from "@/app/context/hooks/useAuth";
 
 interface IPedido {
   id: number;
@@ -28,6 +29,15 @@ export default function PedidoDetailPage() {
   const { id } = useParams();
   const [pedidoData, setPedidoData] = useState<IPedido | null>(null);
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  const {user} = useAuth()
+  const {push} = useRouter()
+  useEffect(() => {
+    if (user) {
+      if (user.role !== 'gerente') {
+        push('/dashboard');
+      }
+    }
+  }, [user, push]);
 
   useEffect(() => {
     // Obtener datos del pedido con los items anidados

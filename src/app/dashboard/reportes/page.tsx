@@ -59,9 +59,21 @@ export default function Reportes() {
     fetchVentas();
     
   }, []);
-  useEffect(() => {
-    user?.role !== 'gerente' ? push('/dashboard') : '...loading'
-  }, [user]);
+  
+    useEffect(() => {
+      // Solo ejecuta esta lógica si `user` no es null o undefined
+      if (user) {
+        if (user.role !== 'gerente') {
+          push('/dashboard');
+        }
+      }
+    }, [user, push]);
+  
+  
+  
+  
+  
+
 
   useEffect(() => {
     filterVentas();
@@ -124,7 +136,6 @@ export default function Reportes() {
 
     setFilteredVentas(filtered);
   };
-
   const exportToExcel = () => {
     const worksheet = XLSX.utils.json_to_sheet(filteredVentas);
     const workbook = XLSX.utils.book_new();

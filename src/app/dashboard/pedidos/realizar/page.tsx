@@ -32,6 +32,13 @@ const CrearPedido: React.FC = () => {
   const [filteredInsumos, setFilteredInsumos] = useState<Insumo[]>([]);
   const [noInsumosMessage, setNoInsumosMessage] = useState<string | null>(null);
   const {user} = useAuth()
+  useEffect(() => {
+    if (user) {
+      if (user.role !== 'gerente') {
+        router.push('/dashboard');
+      }
+    }
+  }, [user, router]);
 
   useEffect(() => {
     const userData = localStorage.getItem("user_data");
@@ -44,10 +51,7 @@ const CrearPedido: React.FC = () => {
       const response = await axios.get("http://localhost:8000/insumos/");
       setInsumos(response.data);
     };
-useEffect(() =>{
-  user?.role !== 'gerente' ? router.push('/dashboard') : '...loading'
 
-},[])
     const fetchProveedores = async () => {
       const response = await axios.get("http://localhost:8000/proveedor/");
       setProveedores(response.data);
