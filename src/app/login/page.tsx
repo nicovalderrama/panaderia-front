@@ -33,7 +33,7 @@ export default function Login() {
       //   // Obtener información del usuario
 
       if (response.ok) {
-        const data = await response.json()
+        const data = await response.json();
         const userId = data.user_id;
         const userResponse = await fetch(
           `http://127.0.0.1:8000/api/usuarios/${userId}/`,
@@ -47,26 +47,25 @@ export default function Login() {
 
         if (userResponse.ok) {
           const userData = await userResponse.json();
-          setToken(data.access)
+          setToken(data.access);
           setUser({
             username: userData.username,
             role: userData.role,
             email: userData.email,
-            id: userData.id
-          })
-          router.push('/dashboard')
+            id: userData.id,
+          });
+          router.push("/dashboard");
           toast.success("Inicio de sesión exitoso");
           router.push("/dashboard"); // Redirigir después de iniciar sesión
         } else {
           toast.error("No se pudo obtener información del usuario");
         }
-
       } else {
-        const errorData = await response.json()
+        const errorData = await response.json();
         toast.error("No se pudo obtener información del usuario");
       }
     } catch (error) {
-      console.error('Error durante el login', error)
+      console.error("Error durante el login", error);
       toast.error("Error en el inicio de sesión");
     }
     // } catch (error) {
@@ -86,9 +85,9 @@ export default function Login() {
     >
       <div className="flex max-w-4xl w-full bg-white rounded-lg shadow-xl overflow-hidden">
         {/* Lado izquierdo con imagen */}
-        <div className="w-1/2 bg-[#735945] flex items-center justify-center p-8">
+        <div className="w-1/2 bg-marron-oscuro flex items-center justify-center p-8">
           <Image
-            src="/logo-claro-elmana.png"
+            src="/logo-marron-elmana-sinfondo.png"
             alt="El Maná Logo"
             width={300}
             height={300}
@@ -104,20 +103,20 @@ export default function Login() {
             exit={{ opacity: 0, y: -20 }}
             className="max-w-md w-full mx-auto"
           >
-            <h2 className="text-3xl font-bold mb-6 text-center text-[#735945]">
+            <h2 className="text-3xl font-bold mb-6 text-center text-marron-oscuro">
               Iniciar sesión
             </h2>
             <form onSubmit={handleLogin} className="space-y-6">
               <div>
                 <label
                   htmlFor="username"
-                  className="block text-sm font-medium text-[#735945]"
+                  className="block text-sm font-medium text-marron-oscuro"
                 >
                   Usuario
                 </label>
                 <div className="mt-1 relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FaUser className="h-5 w-5 text-[#735945]" />
+                    <FaUser className="h-5 w-5 text-marron-oscuro" />
                   </div>
                   <input
                     type="text"
@@ -134,13 +133,13 @@ export default function Login() {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-[#735945]"
+                  className="block text-sm font-medium text-marron-oscuro"
                 >
                   Contraseña
                 </label>
                 <div className="mt-1 relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <FaLock className="h-5 w-5 text-[#735945]" />
+                    <FaLock className="h-5 w-5 text-marron-oscuro" />
                   </div>
                   <input
                     type="password"
@@ -157,7 +156,7 @@ export default function Login() {
               <div>
                 <button
                   type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#8b563b] hover:bg-[#735945] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ebc68e] transition duration-150 ease-in-out"
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-marron-oscuro hover:bg-[#735945] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#ebc68e] transition duration-150 ease-in-out"
                 >
                   Iniciar sesión
                 </button>

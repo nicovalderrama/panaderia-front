@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import DashboardPage from "../../page";
+import { useAuth } from "@/app/context/hooks/useAuth";
 
 interface Producto {
   id: number;
@@ -24,12 +25,14 @@ const GestionProductos = () => {
     null
   );
   const router = useRouter();
+  const {user} = useAuth()
 
   const fetchProductos = async () => {
     try {
       const response = await fetch("http://localhost:8000/productos/");
       const data = await response.json();
       setProductos(data);
+      console.log("data", data);
     } catch (error) {
       toast.error("Error al obtener los productos");
     }
@@ -75,62 +78,74 @@ const GestionProductos = () => {
   };
 
   return (
- <DashboardPage>
-     <div className="p-6  text-white min-h-screen flex flex-col">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Gestión de Productos</h1>
-        <button
-          onClick={handleAgregarProducto}
-          className="bg-[#5a3e2b] text-white py-2 px-4 rounded hover:bg-[#7a5640] transition duration-300"
-        >
-          Agregar Producto
-        </button>
-      </div>
-
-      <TableProducts
-        headers={["ID", "Nombre", "Precio lista", "Precio mayorista", "Cantidad Disponible"]}
-        data={productos}
-        actions={[
-          {
-            label: "Editar",
-            onClick: handleEditar,
-            icon: <AiFillEdit className="text-blue-500" />,
-          },
-          {
-            label: "Eliminar",
-            onClick: handleEliminarClick,
-            icon: <AiFillDelete className="text-red-500" />,
-          },
-        ]}
-      />
-
-      <ModalComponent
-        isOpen={isDeleteModalOpen}
-        onClose={() => setDeleteModalOpen(false)}
-      >
-        <div className="bg-marron-principal p-6 rounded shadow-md">
-          <h2 className="text-lg font-bold mb-4">
-            ¿Estás seguro de que deseas eliminar el producto?
-          </h2>
-          <p className="mb-4">{selectedProducto?.nombre}</p>
-          <div className="flex justify-end space-x-2">
+    <DashboardPage>
+      <div className="p-6  text-white min-h-screen flex flex-col">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold text-marron-oscuro">
+            Gestión de Productos
+          </h1>
+        {
+          user?.role==='gerente'&&(
             <button
-              onClick={() => setDeleteModalOpen(false)}
-              className="bg-gray-300 text-black py-2 px-4 rounded hover:bg-gray-400"
-            >
-              Cancelar
-            </button>
-            <button
-              onClick={handleEliminar}
-              className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
-            >
-              Eliminar
-            </button>
-          </div>
+            onClick={handleAgregarProducto}
+            className="bg-marron-oscuro text-white py-2 px-4 rounded hover:bg-[#7a5640] transition duration-300"
+          >
+            Agregar Producto
+          </button>
+          )
+        }
         </div>
-      </ModalComponent>
-    </div>
- </DashboardPage>
+
+        <TableProducts
+          headers={[
+            "ID",
+            "Nombre",
+            "Precio lista",
+            "Precio mayorista",
+            "Cantidad Disponible",
+          ]}
+          data={productos}
+          actions={user?.role === 'gerente' ? [
+            {
+              label: "Editar",
+              onClick: handleEditar,
+              icon: <AiFillEdit className="text-blue-500" />,
+            },
+            {
+              label: "Eliminar",
+              onClick: handleEliminarClick,
+              icon: <AiFillDelete className="text-red-500" />,
+            },
+          ]: []}
+        />
+
+        <ModalComponent
+          isOpen={isDeleteModalOpen}
+          onClose={() => setDeleteModalOpen(false)}
+        >
+          <div className="bg-marron-principal p-6 rounded shadow-md">
+            <h2 className="text-lg font-bold mb-4">
+              ¿Estás seguro de que deseas eliminar el producto?
+            </h2>
+            <p className="mb-4">{selectedProducto?.nombre}</p>
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={() => setDeleteModalOpen(false)}
+                className="bg-gray-300 text-black py-2 px-4 rounded hover:bg-gray-400"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={handleEliminar}
+                className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </ModalComponent>
+      </div>
+    </DashboardPage>
   );
 };
 

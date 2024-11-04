@@ -8,6 +8,8 @@ import { motion } from "framer-motion";
 import { FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import DashboardPage from "../../page";
+import Image from "next/image";
+import { useAuth } from "@/app/context/hooks/useAuth";
 
 interface Insumo {
   id: number;
@@ -29,6 +31,7 @@ const CrearPedido: React.FC = () => {
   const [parsedUserData, setParsedUserData] = useState<any | null>(null);
   const [filteredInsumos, setFilteredInsumos] = useState<Insumo[]>([]);
   const [noInsumosMessage, setNoInsumosMessage] = useState<string | null>(null);
+  const {user} = useAuth()
 
   useEffect(() => {
     const userData = localStorage.getItem("user_data");
@@ -41,7 +44,10 @@ const CrearPedido: React.FC = () => {
       const response = await axios.get("http://localhost:8000/insumos/");
       setInsumos(response.data);
     };
+useEffect(() =>{
+  user?.role !== 'gerente' ? router.push('/dashboard') : '...loading'
 
+},[])
     const fetchProveedores = async () => {
       const response = await axios.get("http://localhost:8000/proveedor/");
       setProveedores(response.data);
@@ -62,11 +68,11 @@ const CrearPedido: React.FC = () => {
     }),
     onSubmit: async (values) => {
       const itemsData = selectedInsumos
-      .map((insumo) => ({
-        insumo_id: insumo.id,
-        cantidad: insumo.cantidad,
-      }))
-      .filter((insumo) => +insumo.cantidad > 0); // Filtra los que tienen cantidad mayor a 0
+        .map((insumo) => ({
+          insumo_id: insumo.id,
+          cantidad: insumo.cantidad,
+        }))
+        .filter((insumo) => +insumo.cantidad > 0); // Filtra los que tienen cantidad mayor a 0
 
       try {
         const pedidoData = {
@@ -75,17 +81,17 @@ const CrearPedido: React.FC = () => {
           usuario: parsedUserData?.id,
           items: itemsData,
         };
-        const response = await fetch('http://localhost:8000/pedido/', {
-          method: 'POST',
+        const response = await fetch("http://localhost:8000/pedido/", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(pedidoData),
         });
         if (!response.ok) {
-          throw new Error('Error al registrar la venta');
+          throw new Error("Error al registrar la venta");
         }
-    
+
         const result = await response.json();
         toast.success("Pedido creado con éxito");
         formik.resetForm();
@@ -139,17 +145,28 @@ const CrearPedido: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="shadow-none p-4"
+        className="flex flex-col items-center justify-center min-h-screen bg-marron-oscuro"
       >
-        <form onSubmit={formik.handleSubmit} className="p-4 border rounded">
-          <h2 className="text-lg font-bold mb-4">Crear Pedido</h2>
+        <div className="flex justify-center mb-4">
+          <Image
+            src="/logo-marron-elmana-sinfondo.png"
+            alt="Logo"
+            width={200}
+            height={200}
+          />
+        </div>
+        <form
+          onSubmit={formik.handleSubmit}
+          className="p-4 border rounded-lg bg-marron-oscuro shadow-md text-trigo w-[80%]"
+        >
+          <h2 className="text-lg font-bold mb-4 text-trigo">Crear Pedido</h2>
 
           <div className="mb-4">
             <label className="block">Proveedor:</label>
             <select
               {...formik.getFieldProps("proveedorId")}
               onChange={handleProveedorChange}
-              className={`mt-1 block w-full border ${
+              className={`mt-1 block w-full border bg-marron-principal ${
                 formik.touched.proveedorId && formik.errors.proveedorId
                   ? "border-red-500"
                   : "border-gray-300"
@@ -196,7 +213,7 @@ const CrearPedido: React.FC = () => {
                       onChange={(e) =>
                         handleCantidadChange(insumo.id, e.target.value)
                       }
-                      className="border border-gray-300 rounded-md p-1 w-16"
+                      className="border  bg-marron-principal border-gray-300 rounded-md p-1 w-16"
                       disabled={!selectedInsumo}
                     />
                   </div>
@@ -209,13 +226,13 @@ const CrearPedido: React.FC = () => {
             <label className="block">Observaciones:</label>
             <textarea
               {...formik.getFieldProps("observaciones")}
-              className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+              className="mt-1 block w-full bg-marron-principal border border-gray-300 rounded-md p-2"
             />
           </div>
 
           <button
             type="submit"
-            className="flex items-center bg-blue-500 text-white p-2 rounded"
+            className="flex items-center bg-marron-principal text-white p-2 rounded"
           >
             <FaPlus className="mr-2" /> Crear Pedido
           </button>

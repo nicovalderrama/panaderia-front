@@ -10,18 +10,17 @@ const DashboardPage = ({ children }: { children: React.ReactNode }) => {
       {/* <Header /> */}
 
       <div className="flex w-screen h-screen overflow-hidden">
-      <Aside className="w-64 flex-shrink-0" />
+        <Aside className="w-64 flex-shrink-0" />
 
-      <section className="flex-1 bg-marron-oscuro p-4 overflow-hidden">
-        <div className="h-full w-full bg-[#ebc68e] rounded shadow overflow-hidden flex flex-col">
-          <div className="p-8 flex-1 overflow-auto">
-            {children || <Dashboard />}
+        <section className="flex-1 p-1 bg-marron-oscuro overflow-hidden">
+          <div className="h-full w-full bg-[#ebc68e] rounded shadow overflow-hidden flex flex-col">
+            <div className="p-8 flex-1 overflow-auto">
+              {children || <Dashboard />}
+            </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
       {/* <Footer /> */}
-
     </ProtectedLayout>
   );
 };

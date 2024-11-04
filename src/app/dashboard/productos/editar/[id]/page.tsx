@@ -21,16 +21,16 @@ interface ProductoValues {
   imagen?: string;
 }
 const units = [
-  { value: 'kilo', label: 'Kilo' },
-  { value: 'unidad', label: 'Unidad' },
-]
+  { value: "kilo", label: "Kilo" },
+  { value: "unidad", label: "Unidad" },
+];
 export default function EditarProducto() {
   const [image, setImage] = useState<File | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [producto, setProducto] = useState<ProductoValues | null>(null);
   const { id: productId } = useParams();
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -44,6 +44,9 @@ export default function EditarProducto() {
     fetchProduct();
   }, [productId]);
 
+  const handleCancel = () => {
+    router.push("/dashboard/productos/gestionar");
+  };
   const handleSubmit = async (
     values: ProductoValues,
     { resetForm }: FormikHelpers<ProductoValues>
@@ -94,9 +97,9 @@ export default function EditarProducto() {
       setIsSuccess(true);
       resetForm();
       setImage(null);
-     setTimeout(() => {
-      router.push('/dashboard/productos/gestionar')
-     }, 2000)
+      setTimeout(() => {
+        router.push("/dashboard/productos/gestionar");
+      }, 2000);
     } catch (error) {
       toast.error("Hubo un error al editar el producto. Inténtalo de nuevo.", {
         position: "top-right",
@@ -129,9 +132,9 @@ export default function EditarProducto() {
     <DashboardPage>
       <main className="bg-[#ebc68e] flex justify-center items-center min-h-screen">
         <div className="flex w-full ml-12 mr-12 shadow">
-          <div className="flex w-[32rem] items-center justify-center bg-center bg-cover brightness-50 rounded-lg shadow bg-marron-oscuro">
+          <div className="flex w-[32rem] items-center justify-center bg-center bg-cover rounded-lg shadow bg-marron-oscuro">
             <Image
-              src="/logo-marron-elmana.png"
+              src="/logo-marron-elmana-sinfondo.png"
               alt="Logo Marron"
               width={500}
               height={500}
@@ -258,7 +261,9 @@ export default function EditarProducto() {
                         className="w-full max-w-xs select select-ghost bg-amber-100 focus:outline-none"
                         name="unidad"
                       >
-                        <option value="" disabled>Seleccione una unidad</option>
+                        <option value="" disabled>
+                          Seleccione una unidad
+                        </option>
                         {units.map((unit) => (
                           <option key={unit.value} value={unit.value}>
                             {unit.label}
@@ -290,7 +295,7 @@ export default function EditarProducto() {
                     <button
                       type="reset"
                       className="w-48 px-4 py-2 rounded bg-[#5c3826] text-white hover:bg-[#4b2b1f] flex items-center justify-center"
-                      onClick={() => resetForm()}
+                      onClick={handleCancel}
                     >
                       Cancelar
                     </button>
@@ -298,12 +303,13 @@ export default function EditarProducto() {
                     <button
                       type="submit"
                       disabled={isSubmitting}
-                      className={`w-48 px-4 py-2 rounded transition-colors duration-300 ${isSubmitting
+                      className={`w-48 px-4 py-2 rounded transition-colors duration-300 ${
+                        isSubmitting
                           ? "bg-[#5c3826] text-white"
                           : isSuccess
-                            ? "bg-green-700 text-white"
-                            : "bg-[#ebc68e] text-[#5c3826] hover:bg-[#d6b765]"
-                        } flex items-center justify-center`}
+                          ? "bg-green-700 text-white"
+                          : "bg-[#ebc68e] text-[#5c3826] hover:bg-[#d6b765]"
+                      } flex items-center justify-center`}
                     >
                       {isSubmitting ? (
                         <FaSpinner className="animate-spin" />

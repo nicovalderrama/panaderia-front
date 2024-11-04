@@ -14,13 +14,15 @@ const Aside = ({ className }: AsideProps) => {
   const [isVentasOpen, setVentasOpen] = useState(false);
   const [isProveedoresOpen, setProveedoresOpen] = useState(false);
   const [isCuentaOpen, setCuentaOpen] = useState(false);
-  const { logout } = useAuth()
+  const [isInventarioOpen, setInventarioOpen] = useState(false);
+  const { logout } = useAuth();
   const activeStyle = "bg-[#ebc68e] text-gray-700";
   const inactiveStyle = "hover:bg-[#ebc68e] hover:text-gray-700";
-  const router = useRouter()
-
+  const router = useRouter();
+  const { user } = useAuth();
+  console.log(user);
   return (
-    <aside className={`h-full bg-[#735945] text-white ${className}`}>
+    <aside className={`h-full bg-[#3c2010] text-white ${className}`}>
       <div className="flex flex-col justify-between h-full border-e">
         <div className=" px-4 py-6 h-full">
           <span className="grid w-32 h-10 mx-auto text-xs place-content-center">
@@ -79,15 +81,18 @@ const Aside = ({ className }: AsideProps) => {
                           Gestionar productos
                         </Link>
                       </li>
-                      <li>
-                        <Link
-                          href="/dashboard/productos/agregar"
-                          replace
-                          className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
-                        >
-                          Agregar producto
-                        </Link>
-                      </li>
+                      {user?.role === 'gerente' && (
+                        <li>
+                          <Link
+                            href="/dashboard/productos/agregar"
+                            replace
+                            className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                          >
+                            Agregar producto
+                          </Link>
+                        </li>
+                      )}
+
                     </motion.ul>
                   )}
                 </AnimatePresence>
@@ -129,7 +134,7 @@ const Aside = ({ className }: AsideProps) => {
                     >
                       <li>
                         <Link
-                          href={'/dashboard/productos/tabla'}
+                          href={"/dashboard/productos/tabla"}
                           replace
                           className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
                         >
@@ -175,24 +180,32 @@ const Aside = ({ className }: AsideProps) => {
                       transition={{ duration: 0.3 }}
                       className="px-4 mt-2 space-y-1"
                     >
-                      <li>
-                        <Link
-                          href="/dashboard/proveedores"
-                          replace
-                          className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
-                        >
-                          Registrar Proveedor
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href={"/dashboard/pedidos/realizar"}
-                          replace
-                          className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
-                        >
-                          Realizar pedido
-                        </Link>
-                      </li>
+                      {
+                        user?.role === 'gerente' && (
+                          <li>
+                            <Link
+                              href="/dashboard/proveedores"
+                              replace
+                              className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                            >
+                              Registrar Proveedor
+                            </Link>
+                          </li>
+                        )}
+                      {
+                        user?.role === 'gerente' && (
+
+
+                          <li>
+                            <Link
+                              href={"/dashboard/pedidos/realizar"}
+                              replace
+                              className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                            >
+                              Realizar pedido
+                            </Link>
+                          </li>
+                        )}
                       <li>
                         <Link
                           href="/dashboard/pedidos/recepcion"
@@ -207,25 +220,77 @@ const Aside = ({ className }: AsideProps) => {
                 </AnimatePresence>
               </div>
             </li>
-            <li>
-              <Link
-                href="/dashboard/reportes"
-                replace
-                className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
-              >
-                Reportes
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/dashboard/inventario"
-                replace
-                className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
-              >
-                Inventario
-              </Link>
-            </li>
-
+            {
+              user?.role === 'gerente' && (
+                <li>
+                  <Link
+                    href="/dashboard/reportes"
+                    replace
+                    className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                  >
+                    Reportes
+                  </Link>
+                </li>
+              )}
+            {
+              user?.role === 'gerente' && (
+                <li>
+                  <div>
+                    <button
+                      onClick={() => setInventarioOpen(!isInventarioOpen)} // Cambia el estado para mostrar/ocultar
+                      className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${isInventarioOpen ? activeStyle : inactiveStyle
+                        }`}
+                    >
+                      <span>Inventario</span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`transition duration-300 ${isInventarioOpen ? "rotate-180" : ""
+                          }`}
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        width="20"
+                        height="20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                    <AnimatePresence>
+                      {isInventarioOpen && (
+                        <motion.ul
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="px-4 mt-2 space-y-1"
+                        >
+                          <li>
+                            <Link
+                              href="/dashboard/inventario/crear"
+                              replace
+                              className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                            >
+                              Crear Insumo
+                            </Link>
+                          </li>
+                          <li>
+                            <Link
+                              href="/dashboard/inventario/"
+                              replace
+                              className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                            >
+                              Ver Inventario
+                            </Link>
+                          </li>
+                        </motion.ul>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </li>
+              )}
             <li>
               <div>
                 <button

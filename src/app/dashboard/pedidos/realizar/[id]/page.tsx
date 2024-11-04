@@ -34,7 +34,6 @@ export default function PedidoDetailPage() {
     fetch(apiUrl + `/pedido/${id}/`)
       .then((response) => response.json())
       .then((data) => {
-        console.log("Pedido data:", data); // Verificar si hay datos
         setPedidoData(data); // Los items ahora vienen dentro de 'data'
       })
       .catch((error) => console.error("Error fetching order data:", error));
@@ -89,7 +88,6 @@ export default function PedidoDetailPage() {
     doc.save(`pedido-${pedidoData.id}.pdf`);
   };
 
-  console.log("VER LOS ITEMS:", pedidoData?.items);
 
   if (!pedidoData) return <div>Cargando...</div>;
 
