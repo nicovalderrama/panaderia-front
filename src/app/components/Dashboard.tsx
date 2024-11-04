@@ -9,6 +9,7 @@ import ProductosMasVendidos from "./utils/prodMasVendidos";
 
 const Dashboard = () => {
   const { user } = useAuth();
+
   return (
     <main className="flex-grow">
       <h1 className="px-6 py-4 text-3xl font-bold text-marron-oscuro font-kindred">
@@ -30,13 +31,20 @@ const Dashboard = () => {
           </h2>
           <p className="text-sm">Administra todos tus productos aquí.</p>
         </Link>
-        <Link
+       
+       {
+        user?.role ==='gerente' &&(
+          <Link
           href="/dashboard/reportes"
           className="block p-4 bg-marron-oscuro rounded-lg shadow-md hover:bg-marron-principal transition duration-300"
         >
           <h2 className="text-lg font-semibold text-[#f3c176]">Reportes</h2>
           <p className="text-sm ">Genera reportes de ventas y inventario.</p>
         </Link>
+        )
+       }
+        {
+        user?.role ==='gerente' &&(
         <Link
           href="/dashboard/inventario"
           className="block p-4 bg-marron-oscuro rounded-lg shadow-md hover:bg-marron-principal transition duration-300"
@@ -44,7 +52,9 @@ const Dashboard = () => {
           <h2 className="text-lg font-semibold text-[#f3c176]">Inventario</h2>
           <p className="text-sm ">Verifica el estado de tu inventario.</p>
         </Link>
-
+        )}
+         {
+        user?.role ==='gerente' &&(
         <Link
           href="/dashboard/pedidos/realizar"
           className="block p-4 bg-marron-oscuro rounded-lg shadow-md hover:bg-marron-principal transition duration-300"
@@ -54,7 +64,7 @@ const Dashboard = () => {
           </h2>
           <p className="text-sm ">Haz un nuevo pedido a los proveedores.</p>
         </Link>
-
+        )}
         <Link
           href="/dashboard/pedidos/recepcion"
           className="block p-4 bg-marron-oscuro rounded-lg shadow-md hover:bg-marron-principal transition duration-300"

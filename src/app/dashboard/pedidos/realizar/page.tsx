@@ -9,6 +9,7 @@ import { FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import DashboardPage from "../../page";
 import Image from "next/image";
+import { useAuth } from "@/app/context/hooks/useAuth";
 
 interface Insumo {
   id: number;
@@ -30,6 +31,14 @@ const CrearPedido: React.FC = () => {
   const [parsedUserData, setParsedUserData] = useState<any | null>(null);
   const [filteredInsumos, setFilteredInsumos] = useState<Insumo[]>([]);
   const [noInsumosMessage, setNoInsumosMessage] = useState<string | null>(null);
+  const {user} = useAuth()
+  useEffect(() => {
+    if (user) {
+      if (user.role !== 'gerente') {
+        router.push('/dashboard');
+      }
+    }
+  }, [user, router]);
 
   useEffect(() => {
     const userData = localStorage.getItem("user_data");

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import Image from "next/image";
 import { initialValuesProducto as initialValues } from "./utils/initialValues";
 import { validationSchemaProducto } from "./utils/validation.yup";
@@ -8,6 +8,8 @@ import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import { Bounce, toast, ToastContainer } from "react-toastify";
 import ImageUpload from "../../../components/imageUploader";
 import DashboardPage from "../../page";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/context/hooks/useAuth";
 
 interface ProductoValues {
   nombre: string;
@@ -28,7 +30,11 @@ export default function AgregarProducto() {
   const [image, setImage] = useState<File | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const {push} = useRouter()
+  const {user } = useAuth()
+  useEffect(() =>{
+    user?.role!=='gerente' ? push('/dashboard'):'...loading';
+  },[])
   const handleSubmit = async (
     values: ProductoValues,
     { resetForm }: FormikHelpers<ProductoValues>

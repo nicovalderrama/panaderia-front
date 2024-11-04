@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/hooks/useAuth";
 
@@ -19,6 +19,7 @@ const Aside = ({ className }: AsideProps) => {
   const activeStyle = "bg-[#ebc68e] text-gray-700";
   const inactiveStyle = "hover:bg-[#ebc68e] hover:text-gray-700";
   const router = useRouter();
+  const { user } = useAuth();
 
   return (
     <aside className={`h-full bg-[#3c2010] text-white ${className}`}>
@@ -42,16 +43,14 @@ const Aside = ({ className }: AsideProps) => {
               <div>
                 <button
                   onClick={() => setProductosOpen(!isProductosOpen)}
-                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${
-                    isProductosOpen ? activeStyle : inactiveStyle
-                  }`}
+                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${isProductosOpen ? activeStyle : inactiveStyle
+                    }`}
                 >
                   <span>Productos</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className={`transition duration-300 ${
-                      isProductosOpen ? "rotate-180" : ""
-                    }`}
+                    className={`transition duration-300 ${isProductosOpen ? "rotate-180" : ""
+                      }`}
                     viewBox="0 0 20 20"
                     fill="currentColor"
                     width="20"
@@ -82,15 +81,18 @@ const Aside = ({ className }: AsideProps) => {
                           Gestionar productos
                         </Link>
                       </li>
-                      <li>
-                        <Link
-                          href="/dashboard/productos/agregar"
-                          replace
-                          className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
-                        >
-                          Agregar producto
-                        </Link>
-                      </li>
+                      {user?.role === 'gerente' && (
+                        <li>
+                          <Link
+                            href="/dashboard/productos/agregar"
+                            replace
+                            className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                          >
+                            Agregar producto
+                          </Link>
+                        </li>
+                      )}
+
                     </motion.ul>
                   )}
                 </AnimatePresence>
@@ -101,16 +103,14 @@ const Aside = ({ className }: AsideProps) => {
               <div>
                 <button
                   onClick={() => setVentasOpen(!isVentasOpen)}
-                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${
-                    isVentasOpen ? activeStyle : inactiveStyle
-                  }`}
+                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${isVentasOpen ? activeStyle : inactiveStyle
+                    }`}
                 >
                   <span>Ventas</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className={`transition duration-300 ${
-                      isVentasOpen ? "rotate-180" : ""
-                    }`}
+                    className={`transition duration-300 ${isVentasOpen ? "rotate-180" : ""
+                      }`}
                     viewBox="0 0 20 20"
                     fill="currentColor"
                     width="20"
@@ -151,16 +151,14 @@ const Aside = ({ className }: AsideProps) => {
               <div>
                 <button
                   onClick={() => setProveedoresOpen(!isProveedoresOpen)}
-                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${
-                    isProveedoresOpen ? activeStyle : inactiveStyle
-                  }`}
+                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${isProveedoresOpen ? activeStyle : inactiveStyle
+                    }`}
                 >
                   <span>Proveedores</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className={`transition duration-300 ${
-                      isProveedoresOpen ? "rotate-180" : ""
-                    }`}
+                    className={`transition duration-300 ${isProveedoresOpen ? "rotate-180" : ""
+                      }`}
                     viewBox="0 0 20 20"
                     fill="currentColor"
                     width="20"
@@ -182,24 +180,32 @@ const Aside = ({ className }: AsideProps) => {
                       transition={{ duration: 0.3 }}
                       className="px-4 mt-2 space-y-1"
                     >
-                      <li>
-                        <Link
-                          href="/dashboard/proveedores"
-                          replace
-                          className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
-                        >
-                          Registrar Proveedor
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href={"/dashboard/pedidos/realizar"}
-                          replace
-                          className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
-                        >
-                          Realizar pedido
-                        </Link>
-                      </li>
+                      {
+                        user?.role === 'gerente' && (
+                          <li>
+                            <Link
+                              href="/dashboard/proveedores"
+                              replace
+                              className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                            >
+                              Registrar Proveedor
+                            </Link>
+                          </li>
+                        )}
+                      {
+                        user?.role === 'gerente' && (
+
+
+                          <li>
+                            <Link
+                              href={"/dashboard/pedidos/realizar"}
+                              replace
+                              className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                            >
+                              Realizar pedido
+                            </Link>
+                          </li>
+                        )}
                       <li>
                         <Link
                           href="/dashboard/pedidos/recepcion"
@@ -214,88 +220,89 @@ const Aside = ({ className }: AsideProps) => {
                 </AnimatePresence>
               </div>
             </li>
-            <li>
-              <Link
-                href="/dashboard/reportes"
-                replace
-                className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
-              >
-                Reportes
-              </Link>
-            </li>
-            <li>
-              <div>
-                <button
-                  onClick={() => setInventarioOpen(!isInventarioOpen)} // Cambia el estado para mostrar/ocultar
-                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${
-                    isInventarioOpen ? activeStyle : inactiveStyle
-                  }`}
-                >
-                  <span>Inventario</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className={`transition duration-300 ${
-                      isInventarioOpen ? "rotate-180" : ""
-                    }`}
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    width="20"
-                    height="20"
+            {
+              user?.role === 'gerente' && (
+                <li>
+                  <Link
+                    href="/dashboard/reportes"
+                    replace
+                    className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </button>
-                <AnimatePresence>
-                  {isInventarioOpen && (
-                    <motion.ul
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="px-4 mt-2 space-y-1"
+                    Reportes
+                  </Link>
+                </li>
+              )}
+            {
+              user?.role === 'gerente' && (
+                <li>
+                  <div>
+                    <button
+                      onClick={() => setInventarioOpen(!isInventarioOpen)} // Cambia el estado para mostrar/ocultar
+                      className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${isInventarioOpen ? activeStyle : inactiveStyle
+                        }`}
                     >
-                      <li>
-                        <Link
-                          href="/dashboard/inventario/crear"
-                          replace
-                          className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                      <span>Inventario</span>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className={`transition duration-300 ${isInventarioOpen ? "rotate-180" : ""
+                          }`}
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        width="20"
+                        height="20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                    </button>
+                    <AnimatePresence>
+                      {isInventarioOpen && (
+                        <motion.ul
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3 }}
+                          className="px-4 mt-2 space-y-1"
                         >
-                          Crear Insumo
-                        </Link>
-                      </li>
-                      <li>
-                        <Link
-                          href="/dashboard/inventario/"
-                          replace
-                          className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
-                        >
-                          Ver Inventario
-                        </Link>
-                      </li>
-                    </motion.ul>
-                  )}
-                </AnimatePresence>
-              </div>
-            </li>
-
+                          <li>
+                            <Link
+                              href="/dashboard/inventario/crear"
+                              replace
+                              className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                            >
+                              Crear Insumo
+                            </Link>
+                          </li>
+                          <li>
+                            <Link
+                              href="/dashboard/inventario/"
+                              replace
+                              className="block px-4 py-2 text-sm font-medium rounded-lg hover:bg-[#ebc68e] hover:text-gray-700"
+                            >
+                              Ver Inventario
+                            </Link>
+                          </li>
+                        </motion.ul>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </li>
+              )}
             <li>
               <div>
                 <button
                   onClick={() => setCuentaOpen(!isCuentaOpen)}
-                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${
-                    isCuentaOpen ? activeStyle : inactiveStyle
-                  }`}
+                  className={`flex items-center justify-between px-4 py-2 w-full text-sm font-medium rounded-lg ${isCuentaOpen ? activeStyle : inactiveStyle
+                    }`}
                 >
                   <span>Cuenta</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className={`transition duration-300 ${
-                      isCuentaOpen ? "rotate-180" : ""
-                    }`}
+                    className={`transition duration-300 ${isCuentaOpen ? "rotate-180" : ""
+                      }`}
                     viewBox="0 0 20 20"
                     fill="currentColor"
                     width="20"

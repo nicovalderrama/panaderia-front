@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import DashboardPage from "../page";
 import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
+import { useAuth } from "@/app/context/hooks/useAuth";
+import { useRouter } from "next/navigation";
 interface IVenta {
   id: number;
   fecha_venta: string;
@@ -35,6 +37,8 @@ export default function Reportes() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [sortBy, setSortBy] = useState("date");
+  const {user} = useAuth()
+  const {push} = useRouter()
 
   const headers = [
     "ID",
@@ -53,7 +57,23 @@ export default function Reportes() {
   };
   useEffect(() => {
     fetchVentas();
+    
   }, []);
+  
+    useEffect(() => {
+      // Solo ejecuta esta lógica si `user` no es null o undefined
+      if (user) {
+        if (user.role !== 'gerente') {
+          push('/dashboard');
+        }
+      }
+    }, [user, push]);
+  
+  
+  
+  
+  
+
 
   useEffect(() => {
     filterVentas();
@@ -116,9 +136,7 @@ export default function Reportes() {
 
     setFilteredVentas(filtered);
   };
-
   const exportToExcel = () => {
-    console.log(filterVentas);
     const worksheet = XLSX.utils.json_to_sheet(filteredVentas);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, "Ventas");

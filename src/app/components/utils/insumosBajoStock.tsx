@@ -23,14 +23,13 @@ const InsumosBajoStock = () => {
   }, []);
 
   return (
-    <div>
       <div
-        className={`block p-4 rounded-lg shadow-md transition duration-300 ${
+        className={`block p-4 rounded-lg bg-marron-oscuro shadow-md transition duration-300 ${
           insumos.length > 0 ? "bg-red-500" : "bg-brown-800"
         }`}
       >
         <h2 className="text-lg font-semibold text-[#f3c176]">
-          {insumos.length > 0
+          {insumos.length 
             ? "Insumos con bajo stock !!"
             : "Por el momento no hay insumos con poco stock."}
         </h2>
@@ -56,7 +55,6 @@ const InsumosBajoStock = () => {
           )}
         </div>
       </div>
-    </div>
   );
 };
 

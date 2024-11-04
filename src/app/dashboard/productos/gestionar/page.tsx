@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AiFillEdit, AiFillDelete } from "react-icons/ai";
 import DashboardPage from "../../page";
+import { useAuth } from "@/app/context/hooks/useAuth";
 
 interface Producto {
   id: number;
@@ -24,6 +25,7 @@ const GestionProductos = () => {
     null
   );
   const router = useRouter();
+  const {user} = useAuth()
 
   const fetchProductos = async () => {
     try {
@@ -82,12 +84,16 @@ const GestionProductos = () => {
           <h1 className="text-2xl font-bold text-marron-oscuro">
             Gestión de Productos
           </h1>
-          <button
+        {
+          user?.role==='gerente'&&(
+            <button
             onClick={handleAgregarProducto}
             className="bg-marron-oscuro text-white py-2 px-4 rounded hover:bg-[#7a5640] transition duration-300"
           >
             Agregar Producto
           </button>
+          )
+        }
         </div>
 
         <TableProducts
@@ -99,7 +105,7 @@ const GestionProductos = () => {
             "Cantidad Disponible",
           ]}
           data={productos}
-          actions={[
+          actions={user?.role === 'gerente' ? [
             {
               label: "Editar",
               onClick: handleEditar,
@@ -110,7 +116,7 @@ const GestionProductos = () => {
               onClick: handleEliminarClick,
               icon: <AiFillDelete className="text-red-500" />,
             },
-          ]}
+          ]: []}
         />
 
         <ModalComponent

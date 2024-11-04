@@ -22,11 +22,11 @@ export default function ProductCard({ product, quantity, removeItems }: ProductC
       className="bg-white rounded-lg shadow-md overflow-hidden"
     >
       <div className="flex">
-        <div className="w-1/3 relative">
+        <div className="w-56 relative p-4">
           <motion.img
             src={product.imagen || '/placeholder.png'}
             alt={product.nombre}
-            className="w-full h-full object-cover"
+            className="w-full h-full shadow-md object-cover"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
