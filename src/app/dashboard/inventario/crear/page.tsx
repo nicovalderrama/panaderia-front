@@ -17,8 +17,6 @@ const InsumoSchema = Yup.object().shape({
 
 const CrearInsumo = () => {
   const [proveedores, setProveedores] = useState([]);
-
-  // Obtener los proveedores al montar el componente
   useEffect(() => {
     const obtenerProveedores = async () => {
       try {
@@ -88,7 +86,6 @@ const CrearInsumo = () => {
               >
                 {({ errors, touched }) => (
                   <Form className="space-y-6">
-                    {/* Código de los campos del formulario */}
                     <div className="flex flex-col space-y-2">
                       <label
                         htmlFor="nombre"
