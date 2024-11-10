@@ -82,7 +82,7 @@ const CrearPedido: React.FC = () => {
         const pedidoData = {
           observaciones: values.observaciones,
           proveedor: values.proveedorId,
-          usuario: parsedUserData?.id,
+          usuario: user?.id,
           items: itemsData,
         };
         const response = await fetch("http://localhost:8000/pedido/", {

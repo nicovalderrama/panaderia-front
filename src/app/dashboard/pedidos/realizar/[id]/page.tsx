@@ -19,7 +19,7 @@ interface IPedido {
 
 interface IItemPedido {
   id: number;
-  insumo: { nombre: string };
+  insumo: { nombre: string, precio_comprado:string };
   cantidad: number;
   precio: number;
   pedido_id: number;
@@ -50,6 +50,7 @@ export default function PedidoDetailPage() {
   }, [id]);
 
   const generarPDF = () => {
+    console.log(pedidoData)
     if (!pedidoData || !pedidoData.items || pedidoData.items.length === 0)
       return;
 
@@ -85,12 +86,12 @@ export default function PedidoDetailPage() {
       y += 10;
       doc.text(item.insumo.nombre, 30, y);
       doc.text(String(item.cantidad), 100, y);
-      doc.text(`$${item.precio}`, 150, y);
+      doc.text(`$${item.insumo.precio_comprado}`, 150, y);
     });
 
     y += 20;
     doc.setFontSize(14);
-    doc.text(`Total: $${pedidoData.total}`, 150, y);
+    // doc.text(`Total: $${pedidoData.total}`, 150, y);
 
     doc.setFontSize(10);
     doc.text("Gracias por su compra en El Maná", 105, 280, { align: "center" });
@@ -138,15 +139,15 @@ export default function PedidoDetailPage() {
                   <tr key={item.id}>
                     <td>{item.insumo.nombre}</td>
                     <td>{item.cantidad}</td>
-                    <td>${item.precio}</td>
+                    <td>${item.insumo.precio_comprado}</td>
                   </tr>
                 )
               )}
             </tbody>
           </table>
-          <p className="text-xl font-bold text-right mb-6">
+          {/* <p className="text-xl font-bold text-right mb-6">
             Total: ${pedidoData.total}
-          </p>
+          </p> */}
           <button
             onClick={generarPDF}
             className="w-full bg-[#8B4513] text-white font-bold py-2 px-4 rounded hover:bg-[#A0522D] transition duration-300"
