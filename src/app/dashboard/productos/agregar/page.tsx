@@ -32,9 +32,13 @@ export default function AgregarProducto() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {push} = useRouter()
   const {user } = useAuth()
-  useEffect(() =>{
-    user?.role!=='gerente' ? push('/dashboard'):'...loading';
-  },[])
+  useEffect(() => {
+    if (user) {
+      if (user.role !== 'gerente') {
+        push('/dashboard');
+      }
+    }
+  }, [user, push]);
   const handleSubmit = async (
     values: ProductoValues,
     { resetForm }: FormikHelpers<ProductoValues>

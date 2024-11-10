@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../context/hooks/useAuth";
 
@@ -20,6 +20,7 @@ const Aside = ({ className }: AsideProps) => {
   const inactiveStyle = "hover:bg-[#ebc68e] hover:text-gray-700";
   const router = useRouter();
   const { user } = useAuth();
+
   return (
     <aside className={`h-full bg-[#3c2010] text-white ${className}`}>
       <div className="flex flex-col justify-between h-full border-e">
